@@ -1,27 +1,31 @@
+Preparation
+===========================================
+1. Pre-requisite packages to be installed:go to java/vdp_maven directory and run the command
+
+     mvn install
+
 Running the Cybersource and Visa Checkout sample code
-===================================================== 
-1. Download and install httpcomponents library from https://hc.apache.org/httpcomponents-client-4.5.x/index.html
-2. Make sure to include the jars in your classpath
-3. Log on to beta.developer.visa.com and click on your app name
-4. Copy the APIKey and Shared secret to any text editor
-5. Download the java sample code Cybersourcesample.java or VisaCheckoutsample.java to your local folder
-6. Replace "put your api key here" with the APIKey from step 4
-7. Replace "put your shared secret here" with the Shared Secret from step 4
-8. Compile and run the sample code
-9. You should see response from the respective API calls
+=====================================================
+1. Log on to https://developer.visa.com/, go to the Dashboard and click on your app name
+2. Copy the API Key and Shared Secret from Keys/APIs tab
+3. Replace "put your api key here" in the respective .java file with the API Key from step 2
+4. Replace "put your shared secret here" in the respective .java file with the Shared Secret from step 2
+5. [a] For Cybersource run CybersourceClient.java
+     
+   [b] For VisaCheckout run VisaCheckoutClient.java
+
+6. You should see response from the respective API calls
 
 Running the VisaDirect sample code
-===================================================== 
-1. Download and install httpcomponents library from https://hc.apache.org/httpcomponents-client-4.5.x/index.html
-2. Make sure to include the jars in your classpath
-3. Log on to beta.developer.visa.com and click on your app name
-4. Copy the userid and password from the Keys/Apps tab to any text editor
-5. By this time you should have created the certificate keystore
-6. Download the java sample code VisaDirectsample.java to your local folder
-7. Replace "{put your user id here}" with the user id from step 4
-7. Replace "{put your password here}" with the password from step 4
-8. Replace "{put the path to the keystore file here}" with the path to the keystore file
-9. Replace "{put the keystore password}" with the path to the keystore password
-10. Replace "{put the private key password here}" with the private key password
-11. Compile and run the sample code
-12. You should see response from the VisaDirect API calls
+=====================================================  
+1. Log on to https://developer.visa.com/, go to the Dashboard and click on your app name
+2. Copy the User ID and Password from the Keys/APIs tab
+3. Download the cert.pem from app details on VDP portal (should be visible under the Certificates when you click on the app name in Dashboard and go to Keys/APIs)
+4. Replace "{put your user id here}" with the user id from step 2
+5. Replace "{put your password here}" with the password from step 2
+6. Replace "{put the path to the keystore file here}" with the path to the keystore file
+7. Replace "{put the keystore password}" with the path to the keystore password
+8. Replace "{put the private key password here}" with the private key password
+9. Run VisaDirectClient.java
+10. You should see response from the VisaDirect API call
+11. To know more about generation of keystore file and CSR upload to create app, go to https://developer.visa.com/vdpguide#gettingStarted

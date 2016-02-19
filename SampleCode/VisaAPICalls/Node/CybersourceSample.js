@@ -17,10 +17,10 @@ var postBody = JSON.stringify({
 });
 
 var timestamp = Math.floor(Date.now() / 1000);
-var preHashString = sharedSecret + timestamp + resourcePath + queryParams + postBody;
+var preHashString = timestamp + resourcePath + queryParams + postBody;
 var crypto = require('crypto');
-var hashString = crypto.createHash('sha256').update(preHashString).digest('hex');
-var xPayToken = 'x:' + timestamp + ':' + hashString;
+var hashString = crypto.createHmac('SHA256', sharedSecret).update(preHashString).digest('hex');
+var xPayToken = 'xv2:' + timestamp + ':' + hashString;
 
 
 var req = request.defaults();

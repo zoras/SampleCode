@@ -1,8 +1,8 @@
 # Visa Developer Platform - Sample Code Snippets
 
-This repository hosts the sample code snippets for the [Visa Developer Platform](https://vdp.visa.com/)
+This repository hosts the sample code snippets for the [Visa Developer Platform](https://developer.visa.com/)
 
-If you are new to the Visa Developer Platform, please take a look at our [Getting Started Guide](https://vdp.visa.com/vdpguide#get-started-overview) which walks you through the steps to make a basic helloworld API call.
+If you are new to the Visa Developer Platform, please take a look at our [Getting Started Guide](https://developer.visa.com/vdpguide#get-started-overview) which walks you through the steps to make a basic helloworld API call.
 
 Once you are comfortable with the same and have also explored the documentation to know about the various API that Visa exposes, you can then use the sample code on this site as a starting point in your journey towards building your application.
 

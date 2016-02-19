@@ -10,47 +10,46 @@ $privateKey = "put the private key pem file path here";
 $userId = "put your user id for the app from VDP Portal here";
 $password = "put your password for the app from VDP Portal here";
 
-$requestBodyString = "{
-  \"systemsTraceAuditNumber\": 300259,
-  \"retrievalReferenceNumber\": \"407509300259\",
-  \"localTransactionDateTime\": \"2021-10-26T21:32:52\",
-  \"acquiringBin\": 409999,
-  \"acquirerCountryCode\": \"101\",
-  \"senderPrimaryAccountNumber\": \"4957030100009952\",
-  \"senderCardExpiryDate\": \"2020-03\",
-  \"senderCurrencyCode\": \"USD\",
-  \"amount\": \"110\",
-  \"surcharge\": \"2.00\",
-  \"cavv\": \"0000010926000071934977253000000000000000\",
-  \"foreignExchangeFeeTransaction\": \"10.00\",
-  \"businessApplicationId\": \"AA\",
-  \"merchantCategoryCode\": 6012,
-  \"cardAcceptor\": {
-    \"name\": \"Saranya\",
-    \"terminalId\": \"365539\",
-    \"idCode\": \"VMT200911026070\",
-    \"address\": {
-      \"state\": \"CA\",
-      \"county\": \"081\",
-      \"country\": \"USA\",
-      \"zipCode\": \"94404\"
-    }
-  },
-  \"magneticStripeData\": {
-    \"track1Data\": \"1010101010101010101010101010\"
-  },
-  \"pointOfServiceData\": {
-    \"panEntryMode\": \"90\",
-    \"posConditionCode\": \"0\",
-    \"motoECIIndicator\": \"0\"
-  },
-  \"pointOfServiceCapability\": {
-    \"posTerminalType\": \"4\",
-    \"posTerminalEntryCapability\": \"2\"
-  },
-  \"feeProgramIndicator\": \"123\"
-}";
-
+$requestBodyString = json_encode([
+  'systemsTraceAuditNumber' => 300259,
+  'retrievalReferenceNumber' => '407509300259',
+  'localTransactionDateTime' => '2016-02-12T16:22:13',
+  'acquiringBin' => 409999,
+  'acquirerCountryCode' => '101',
+  'senderPrimaryAccountNumber' => '4957030100009952',
+  'senderCardExpiryDate' => '2020-03',
+  'senderCurrencyCode' => 'USD',
+  'amount' => '110',
+  'surcharge' => '2.00',
+  'cavv' => '0000010926000071934977253000000000000000',
+  'foreignExchangeFeeTransaction' => '10.00',
+  'businessApplicationId' => 'AA',
+  'merchantCategoryCode' => 6012,
+  'cardAcceptor' => [
+    'name' => 'Saranya',
+    'terminalId' => '365539',
+    'idCode' => 'VMT200911026070',
+    'address' => [
+      'state' => 'CA',
+      'county' => '081',
+      'country' => 'USA',
+      'zipCode' => '94404'
+    ]
+  ],
+  'magneticStripeData' => [
+    'track1Data' => '1010101010101010101010101010'
+  ],
+  'pointOfServiceData' => [
+    'panEntryMode' => '90',
+    'posConditionCode' => '0',
+    'motoECIIndicator' => '0'
+  ],
+  'pointOfServiceCapability' => [
+    'posTerminalType' => '4',
+    'posTerminalEntryCapability' => '2'
+  ],
+  'feeProgramIndicator' => '123'
+] );
 
 $authString = $userId.":".$password;
 $authStringBytes = utf8_encode($authString);
@@ -70,6 +69,9 @@ curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
 //getting response from server
 $response = curl_exec($ch);
+if(!$response) {
+    die('Error: "' . curl_error($ch) . '" - Code: ' . curl_errno($ch));
+}
 echo "<strong>HTTP Status:</strong> <br>".curl_getinfo($ch, CURLINFO_HTTP_CODE)."<br><br>";
 curl_close($ch);
 $json = json_decode($response);

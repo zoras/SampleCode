@@ -8,10 +8,10 @@ var resourcePath = 'payment/data/' + callId;
 var queryParams = 'apikey=' + apiKey;
 
 var timestamp = Math.floor(Date.now() / 1000);
-var preHashString = sharedSecret + timestamp + resourcePath + queryParams;
+var preHashString = timestamp + resourcePath + queryParams;
 var crypto = require('crypto');
-var hashString = crypto.createHash('sha256').update(preHashString).digest('hex');
-var xPayToken = 'x:' + timestamp + ':' + hashString;
+var hashString = crypto.createHmac('SHA256', sharedSecret).update(preHashString).digest('hex');
+var xPayToken = 'xv2:' + timestamp + ':' + hashString;
 
 var url = 'https://sandbox.api.visa.com/' + baseUri + resourcePath + '?' + queryParams;
 var headers = {'content-type': 'application/json', 'accept':'application/json','x-pay-token': xPayToken} 

@@ -16,7 +16,7 @@ import com.visa.vdp.util.XPayTokenGeneration;
  */
 public class CybersourceClient extends AbstractClient{
 
-	final static Logger logger = Logger.getLogger(VisaTokenServiceClient.class);
+	final static Logger logger = Logger.getLogger(CybersourceClient.class);
 	
     static final String API_KEY = "{put your api key here}";
     static final String SHARED_SECRET = "{put your shared secret here}";
@@ -38,7 +38,7 @@ public class CybersourceClient extends AbstractClient{
     	
     	// Load the body for the post request
         String body = "{\"amount\":\"1\",\"currency\":\"USD\",\"payment\":{\"cardExpirationMonth\":\""+getCurrentMonth()+"\",\"cardExpirationYear\":\""+getNextYear()+"\",\"cardNumber\":\"4111111111111111\"}}";
-        String xPayToken = XPayTokenGeneration.generateXpaytoken(body, AUTHORIZE_CREDIT, API_KEY, SHARED_SECRET) ;
+        String xPayToken = XPayTokenGeneration.generateXpaytoken(body, CREATE_SALES, API_KEY, SHARED_SECRET) ;
         String url = "";
         String responseBody = "";
         String crId = RandomStringUtils.random(15, true, true);
@@ -70,7 +70,7 @@ public class CybersourceClient extends AbstractClient{
         body = "{  \"amount\": \"1\",  \"currency\": \"USD\"}";
         REFUND_SALE  = StringUtils.replace(REFUND_SALE, "{sales-id}", sales_id);
         url =  API_URI + BASE_URI + REFUND_SALE + "?apikey=" + API_KEY;
-        xPayToken = XPayTokenGeneration.generateXpaytoken("", REFUND_SALE, API_KEY, SHARED_SECRET) ;
+        xPayToken = XPayTokenGeneration.generateXpaytoken(body, REFUND_SALE, API_KEY, SHARED_SECRET) ;
         responseBody = getResponseForXPayToken(url, xPayToken, body, "POST", crId);
         
         // Retrieve A Refund
@@ -214,6 +214,7 @@ public class CybersourceClient extends AbstractClient{
         VOID_CREDIT = StringUtils.replace(VOID_CREDIT, "{credit-id}", cardId);
         url =  API_URI + BASE_URI + VOID_CREDIT + "?apikey=" + API_KEY;
         body = "{\"referenceId\": \""+RandomStringUtils.random(15, false, true)+"\"}";
+        xPayToken = XPayTokenGeneration.generateXpaytoken(body, VOID_CREDIT, API_KEY, SHARED_SECRET) ;
         getResponseForXPayToken(url, xPayToken, body, "POST", crId);
         
     }

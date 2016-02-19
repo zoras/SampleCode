@@ -9,9 +9,9 @@ $query_string = "apiKey=" + $api_key
 def get_xpay_token(resource_path, query_string, request_body)
   require 'digest'
   timestamp = Time.now.getutc.to_i.to_s
-  hash_input = $shared_secret + timestamp + resource_path + query_string + request_body
-  hash_output = Digest::SHA256.hexdigest(hash_input)
-  return "x:" + timestamp + ":" + hash_output
+  hash_input = timestamp + resource_path + query_string + request_body
+  hash_output = OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha256'), $shared_secret, hash_input)
+  return "xv2:" + timestamp + ":" + hash_output
 end
 
 def authorize_credit_card(request_body)

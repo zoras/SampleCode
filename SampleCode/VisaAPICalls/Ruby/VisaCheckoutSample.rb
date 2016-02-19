@@ -1,3 +1,5 @@
+require 'restclient'
+
 $api_key = "put your api key here"
 $shared_secret = "put your shared secret here"
 $base_url = "https://sandbox.api.visa.com/wallet-services-web/"
@@ -26,9 +28,9 @@ end
 def get_xpay_token(resource_path, query_string, request_body)
   require 'digest'
   timestamp = Time.now.getutc.to_i.to_s
-  hash_input = $shared_secret + timestamp + resource_path + query_string + request_body
-  hash_output = Digest::SHA256.hexdigest(hash_input)
-  return "x:" + timestamp + ":" + hash_output
+  hash_input = timestamp + resource_path + query_string + request_body
+  hash_output = OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha256'), $shared_secret, hash_input)
+  return "xv2:" + timestamp + ":" + hash_output
 end
 
 puts get_payment_data("put your call id here")
