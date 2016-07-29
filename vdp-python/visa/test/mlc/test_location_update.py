@@ -1,15 +1,26 @@
-from visa.test.helpers.vdp_client_utils import VDPTestCaseClient
+from visa.helpers.abstract_visa_api_client import AbstractVisaAPIClient
 import json
+import sys
+import os
 import datetime
-
+import unittest
+if sys.version_info < (3, 0):
+    import ConfigParser as parser
+else:
+    import configparser as parser
 '''
 @author: visa
 '''
 
-class TestLocationUpdate(VDPTestCaseClient):
+class TestLocationUpdate(unittest.TestCase):
+    
+    config = parser.ConfigParser()
+    config_path = os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(__file__)),'..','configuration.ini'))
+    config.read(config_path)
     
     def setUp(self):
         date = datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+        self.abstract_visa_api_client = AbstractVisaAPIClient()
         self.location_update = json.loads('''{
                                     "accuracy": "5000",
                                     "cloudNotificationKey": "03e3ae03-a627-4241-bad6-58f811c18e46",
@@ -32,6 +43,6 @@ class TestLocationUpdate(VDPTestCaseClient):
     def test_location_update(self):
         base_uri = 'mlc/'
         resource_path = 'locationupdate/v1/locations' 
-        response = self.do_mutual_auth_request(base_uri + resource_path, self.location_update, 'Location Update Test', 'post')
+        response = self.abstract_visa_api_client.do_mutual_auth_request(base_uri + resource_path, self.location_update, 'Location Update Test', 'post')
         self.assertEqual(str(response.status_code) ,"200" ,"Location update test failed")
         pass

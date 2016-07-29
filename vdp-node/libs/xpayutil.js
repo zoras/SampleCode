@@ -1,6 +1,3 @@
-/**
- * http://usejsdoc.org/
- */
 var crypto = require('crypto');
 var config = require('../config/configuration.json');
 

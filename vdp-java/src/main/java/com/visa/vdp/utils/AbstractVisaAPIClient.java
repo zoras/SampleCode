@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.SignatureException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.util.Map;
@@ -19,11 +18,14 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
-import org.apache.http.client.ClientProtocolException;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpRequest;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -36,9 +38,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-public class AbstractClient {
+public class AbstractVisaAPIClient {
     
-    final static Logger logger = Logger.getLogger(AbstractClient.class);
+    final static Logger logger = Logger.getLogger(AbstractVisaAPIClient.class);
     
     private static CloseableHttpClient mutualAuthHttpClient;
     private static CloseableHttpClient XPayHttpClient;
@@ -73,136 +75,82 @@ public class AbstractClient {
         return sslSocketFactory;
     }
     
-    protected CloseableHttpResponse doMutualAuthPostRequest(String path, String testInfo, String body)
-                    throws ClientProtocolException, IOException, KeyManagementException, UnrecoverableKeyException,
-                    NoSuchAlgorithmException, KeyStoreException, CertificateException {
-        
-        String url = VisaProperties.getProperty(Property.END_POINT) + path;
-        
-        logRequestBody(url, testInfo, body);
-        
-        HttpPost httpPost = new HttpPost(url);
-        httpPost.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
-        httpPost.setHeader(HttpHeaders.ACCEPT, "application/json");
-        httpPost.setHeader(HttpHeaders.AUTHORIZATION, BasicAuthHeaderGenerator.getBasicAuthHeader());
-        httpPost.setHeader("x-correlation-id", getCorrelationId());
-        
-        StringEntity postBodyEntity = new StringEntity(body);
-        httpPost.setEntity(postBodyEntity);
-        
-        CloseableHttpResponse response = fetchMutualAuthHttpClient().execute(httpPost);
-        logResponse(response);
-        return response;
-    }
+    private HttpRequest createHttpRequest(MethodTypes methodType, String url) throws Exception {
+    	HttpRequest request = null;
+    	switch (methodType) {
+    	case GET:
+    		request = new HttpGet(url);
+    	    break;
+    	case POST:
+    		request = new HttpPost(url);
+    	    break;
+    	case PUT:
+    		request = new HttpPut(url);
+    	    break;
+    	case DELETE:
+    		request = new HttpDelete(url);
+    	    break;
+    	default:
+    		logger.error("Incompatible HTTP request method " + methodType);
+    	}
+    	return request;
+   }
     
-    protected CloseableHttpResponse doMutualAuthPostRequest(String path, String testInfo, String body, Map<String, String> headers) 
-                    throws KeyManagementException, UnrecoverableKeyException, ClientProtocolException, NoSuchAlgorithmException, 
-                    KeyStoreException, CertificateException, IOException {
-        
+    public CloseableHttpResponse doMutualAuthRequest(String path, String testInfo, String body, MethodTypes methodType, Map<String, String> headers) 
+                    throws Exception {
+       
         String url = VisaProperties.getProperty(Property.END_POINT) + path;
         logRequestBody(url, testInfo, body);
-        HttpPost httpPost = new HttpPost(url);
-        httpPost.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
-        httpPost.setHeader(HttpHeaders.ACCEPT, "application/json");
-        httpPost.setHeader(HttpHeaders.AUTHORIZATION, BasicAuthHeaderGenerator.getBasicAuthHeader());
-        httpPost.setHeader("x-correlation-id", getCorrelationId());
+        HttpRequest request = createHttpRequest(methodType, url);
+        request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+        request.setHeader(HttpHeaders.ACCEPT, "application/json");
+        request.setHeader(HttpHeaders.AUTHORIZATION, BasicAuthHeaderGenerator.getBasicAuthHeader());
+        request.setHeader("x-correlation-id", getCorrelationId());
         
-        StringEntity postBodyEntity = new StringEntity(body);
-        httpPost.setEntity(postBodyEntity);
-        
-        if (headers.isEmpty() == false) {
+        if (headers != null && headers.isEmpty() == false) {
             for (Entry<String, String> header : headers.entrySet()) {
-                httpPost.setHeader(header.getKey(), header.getValue());
+            	request.setHeader(header.getKey(), header.getValue());
             }
         }
         
-        CloseableHttpResponse response = fetchMutualAuthHttpClient().execute(httpPost);
+        if (request instanceof HttpPost) {
+		    ((HttpPost) request).setEntity(new StringEntity(body, "UTF-8"));
+		} else if (request instanceof HttpPut) {
+		    ((HttpPut) request).setEntity(new StringEntity(body, "UTF-8"));
+		}
+        
+        HttpHost host = new HttpHost(VisaProperties.getProperty(Property.END_POINT));
+        CloseableHttpResponse response = fetchMutualAuthHttpClient().execute((HttpUriRequest) request);
         logResponse(response);
         return response;
     }
     
-    protected CloseableHttpResponse doMutualAuthGetRequest(String path, String testInfo, Map<String,String> headers)
-                    throws KeyManagementException, UnrecoverableKeyException, ClientProtocolException,
-                    NoSuchAlgorithmException, KeyStoreException, CertificateException, IOException {
-        String url = VisaProperties.getProperty(Property.END_POINT) + path;
-        logRequestBody(url, testInfo, "");
+    public CloseableHttpResponse doXPayTokenRequest(String baseUri, String resourcePath, String queryParams, String testInfo, String body, MethodTypes methodType, Map<String, String> headers)
+                    throws Exception {
+        String url = VisaProperties.getProperty(Property.END_POINT) + baseUri + resourcePath + "?" + queryParams;
+        logRequestBody(url, testInfo, body);
         
-        HttpGet httpGet = new HttpGet(url);
-        httpGet.setHeader(HttpHeaders.ACCEPT, "application/json");
-        httpGet.setHeader(HttpHeaders.AUTHORIZATION, BasicAuthHeaderGenerator.getBasicAuthHeader());
-        httpGet.setHeader("x-correlation-id", getCorrelationId());
+        String apikey = VisaProperties.getProperty(Property.API_KEY);
         
-        if (headers.isEmpty() == false) {
+        HttpRequest request = createHttpRequest(methodType, url);
+        request.setHeader("content-type", "application/json");
+        String xPayToken = XPayTokenGenerator.generateXpaytoken(resourcePath, "apikey=" + apikey, body);
+        request.setHeader("x-pay-token", xPayToken);
+        request.setHeader("x-correlation-id", getCorrelationId());
+        
+        if (headers != null && headers.isEmpty() == false) {
             for (Entry<String, String> header : headers.entrySet()) {
-                httpGet.setHeader(header.getKey(), header.getValue());
+            	request.setHeader(header.getKey(), header.getValue());
             }
         }
         
-        CloseableHttpResponse response = fetchMutualAuthHttpClient().execute(httpGet);
-        logResponse(response);
-        return response;
-    }
-    
-    protected CloseableHttpResponse doXPayTokenGetRequest(String baseUri, String resourcePath, String queryParams, String testInfo)
-                    throws ClientProtocolException, IOException, KeyManagementException, UnrecoverableKeyException,
-                    NoSuchAlgorithmException, KeyStoreException, CertificateException, SignatureException {
+        if (request instanceof HttpPost) {
+		    ((HttpPost) request).setEntity(new StringEntity(body, "UTF-8"));
+		} else if (request instanceof HttpPut) {
+		    ((HttpPut) request).setEntity(new StringEntity(body, "UTF-8"));
+		}
         
-        String url = VisaProperties.getProperty(Property.END_POINT) + baseUri + resourcePath + "?" + queryParams;
-        
-        logRequestBody(url, testInfo, "");
-        
-        HttpGet httpGet = new HttpGet(url);
-        String apikey = VisaProperties.getProperty(Property.API_KEY);
-        httpGet.setHeader("content-type", "application/json");
-        
-        String xPayToken = XPayTokenGenerator.generateXpaytoken(resourcePath, "apikey=" + apikey, "");
-        httpGet.setHeader("x-pay-token", xPayToken);
-        httpGet.setHeader("x-correlation-id", getCorrelationId());
-        
-        CloseableHttpResponse response = fetchXPayHttpClient().execute(httpGet);
-        logResponse(response);
-        return response;
-    }
-    
-    protected CloseableHttpResponse doXPayTokenPostRequest(String baseUri, String resourcePath, String queryParams, String testInfo, String body)
-                    throws ClientProtocolException, IOException, SignatureException {
-        String url = VisaProperties.getProperty(Property.END_POINT) + baseUri + resourcePath + "?" + queryParams;
-        logRequestBody(url, testInfo, body);
-        
-        String apikey = VisaProperties.getProperty(Property.API_KEY);
-        StringEntity postBodyEntity = new StringEntity(body);
-        
-        HttpPost httpPost = new HttpPost(url);
-        httpPost.setEntity(postBodyEntity);
-        httpPost.setHeader("content-type", "application/json");
-        String xPayToken = XPayTokenGenerator.generateXpaytoken(resourcePath, "apikey=" + apikey, body);
-        httpPost.setHeader("x-pay-token", xPayToken);
-        httpPost.setEntity(postBodyEntity);
-        httpPost.setHeader("x-correlation-id", getCorrelationId());
-        
-        CloseableHttpResponse response = fetchXPayHttpClient().execute(httpPost);
-        logResponse(response);
-        return response;
-    }
-    
-    protected CloseableHttpResponse doXPayTokenPutRequest(String baseUri, String resourcePath, String queryParams, String testInfo, String body)
-                    throws SignatureException, ClientProtocolException, IOException {
-        
-        String url = VisaProperties.getProperty(Property.END_POINT) + baseUri + resourcePath + "?" + queryParams;
-        logRequestBody(url, testInfo, body);
-        HttpPut httpPut = new HttpPut(url);
-        
-        StringEntity postBodyEntity = new StringEntity(body);
-        httpPut.setEntity(postBodyEntity);
-        httpPut.setHeader("content-type", "application/json");
-        
-        String apikey = VisaProperties.getProperty(Property.API_KEY);
-        String xPayToken = XPayTokenGenerator.generateXpaytoken(resourcePath, "apikey=" + apikey, body);
-        httpPut.setHeader("x-pay-token", xPayToken);
-        httpPut.setEntity(postBodyEntity);
-        httpPut.setHeader("x-correlation-id", getCorrelationId());
-        
-        CloseableHttpResponse response = fetchXPayHttpClient().execute(httpPut);
+        CloseableHttpResponse response = fetchXPayHttpClient().execute((HttpUriRequest) request);
         logResponse(response);
         return response;
     }

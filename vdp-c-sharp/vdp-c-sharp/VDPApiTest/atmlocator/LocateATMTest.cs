@@ -5,13 +5,15 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Vdp
 {
     [TestClass]
-    public class LocateATMTest : AbstractClient
+    public class LocateATMTest
     {
         private string atmInquiryRequest;
+        private AbstractVisaAPIClient abstractVisaAPIClient;
 
         public LocateATMTest()
         {
             string strDate = DateTime.UtcNow.ToString("yyyy-MM-ddThh:mm:ssZ");
+            abstractVisaAPIClient = new AbstractVisaAPIClient();
             atmInquiryRequest =
             "{"
               + "\"requestData\": {"
@@ -107,7 +109,7 @@ namespace Vdp
         {
             string baseUri = "globalatmlocator/";
             string resourcePath = "v1/localatms/atmsinquiry";
-            string status = DoMutualAuthCall(baseUri + resourcePath, "POST", "Locate ATM Test", atmInquiryRequest);
+            string status = abstractVisaAPIClient.DoMutualAuthCall(baseUri + resourcePath, "POST", "Locate ATM Test", atmInquiryRequest);
             Assert.AreEqual(status, "OK");
         }
     }

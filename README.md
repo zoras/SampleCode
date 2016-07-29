@@ -6,7 +6,7 @@ If you are new to the Visa Developer Platform, please take a look at our [Gettin
 
 Once you are comfortable with the same and have also explored the documentation to know about the various API that Visa exposes, you can then use the sample code on this site as a starting point in your journey towards building your application.
 
-Currently, the code snippets are provided in 6 languages. Each in there respective folders as follows : 
+Currently, the code snippets are provided in 6 languages. Each of them is present in the respective folder as follows : 
 
 * [C#](vdp-c-sharp)
 * [Java](vdp-java)

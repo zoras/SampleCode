@@ -5,12 +5,14 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Vdp
 {
     [TestClass]
-    public class LocationUpdateTest : AbstractClient
+    public class LocationUpdateTest
     {
         private string locationsRequestBody;
+        private AbstractVisaAPIClient abstractVisaAPIClient;
 
         public LocationUpdateTest()
         {
+            abstractVisaAPIClient = new AbstractVisaAPIClient();
             string strDate = DateTime.UtcNow.ToString("yyyy-MM-ddThh:mm:ssZ");
             locationsRequestBody =
                "{"
@@ -38,7 +40,7 @@ namespace Vdp
         {
             string baseUri = "mlc/";
             string resourcePath = "locationupdate/v1/locations";
-            string status = DoMutualAuthCall(baseUri + resourcePath, "POST", "Location Updates Test", locationsRequestBody);
+            string status = abstractVisaAPIClient.DoMutualAuthCall(baseUri + resourcePath, "POST", "Location Updates Test", locationsRequestBody);
             Assert.AreEqual(status, "OK");
         }
     }

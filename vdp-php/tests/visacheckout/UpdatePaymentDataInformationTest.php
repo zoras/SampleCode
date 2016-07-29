@@ -2,9 +2,11 @@
 
 namespace Vdp;
 
-class UpdatePaymentDataInformationTest extends HttpClient {
+class UpdatePaymentDataInformationTest extends \PHPUnit_Framework_TestCase {
 	
 	public function setUp() {
+		$this->abstractVisaAPIClient = new AbstractVisaAPIClient;
+		$this->conf = parse_ini_file ( "configuration.ini", true );
 		$this->updatePaymentInfoRequest = json_encode ([
                           "orderInfo" => [
                           "currencyCode" => "USD",
@@ -28,7 +30,7 @@ class UpdatePaymentDataInformationTest extends HttpClient {
 		$resourcePath = "payment/info/{callId}";
 		$resourcePath = str_replace("{callId}",$this->conf ['VDP'] ['checkoutCallId'],$resourcePath);
 		$queryString = "apikey=".$this->conf ['VDP'] ['apiKey'];
-		$statusCode = $this->doXPayTokenCall ( 'put', $baseUrl, $resourcePath, $queryString, 'Update Payment Information Test', $this->updatePaymentInfoRequest);
+		$statusCode = $this->abstractVisaAPIClient->doXPayTokenCall ( 'put', $baseUrl, $resourcePath, $queryString, 'Update Payment Information Test', $this->updatePaymentInfoRequest);
 		$this->assertEquals($statusCode, "200");
 	}
 }

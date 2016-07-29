@@ -2,21 +2,27 @@ package com.visa.vdp.cybersource;
 
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.testng.Assert;
+
+import java.util.HashMap;
+
 import org.apache.http.HttpStatus;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import com.visa.vdp.utils.AbstractClient;
+import com.visa.vdp.utils.AbstractVisaAPIClient;
+import com.visa.vdp.utils.MethodTypes;
 import com.visa.vdp.utils.Property;
 import com.visa.vdp.utils.VisaProperties;
 
-public class TestCybersourcePayments extends AbstractClient{
+public class TestCybersourcePayments {
 
 	String apiKey;
 	String paymentAuthorizationRequest;
+	AbstractVisaAPIClient abstractVisaAPIClient;
 
 	@BeforeTest(groups = "cybersource")
 	public void setup() {
+		this.abstractVisaAPIClient = new AbstractVisaAPIClient();
 		this.apiKey = VisaProperties.getProperty(Property.API_KEY);
 		this.paymentAuthorizationRequest = 
 				"{\"amount\": \"0\","
@@ -35,7 +41,7 @@ public class TestCybersourcePayments extends AbstractClient{
 	    String resourcePath = "payments/v1/authorizations";
 	    String queryString = "apikey=" + apiKey;
 	    
-	    CloseableHttpResponse response = doXPayTokenPostRequest(baseUri, resourcePath, queryString, "Payment Authorization Test", this.paymentAuthorizationRequest);
+	    CloseableHttpResponse response = this.abstractVisaAPIClient.doXPayTokenRequest(baseUri, resourcePath, queryString, "Payment Authorization Test", this.paymentAuthorizationRequest, MethodTypes.POST, new HashMap<String, String>());
 	    Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED);
 	    response.close();
 	}

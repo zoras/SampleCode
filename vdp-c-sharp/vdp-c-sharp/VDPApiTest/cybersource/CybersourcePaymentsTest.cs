@@ -5,13 +5,15 @@ using System.Configuration;
 namespace Vdp
 {
     [TestClass]
-    public class CybersourcePaymentsTest : AbstractClient
+    public class CybersourcePaymentsTest
     {
         private string paymentAuthorizationRequest;
+        private AbstractVisaAPIClient abstractVisaAPIClient;
 
         public CybersourcePaymentsTest()
         {
-          paymentAuthorizationRequest =
+            abstractVisaAPIClient = new AbstractVisaAPIClient();
+            paymentAuthorizationRequest =
            "{\"amount\": \"0\","
                + "\"currency\": \"USD\","
                + "\"payment\": {"
@@ -28,7 +30,7 @@ namespace Vdp
             string baseUri = "cybersource/";
             string resourcePath = "payments/v1/authorizations";
             string queryString = "apikey=" + ConfigurationManager.AppSettings["apiKey"];
-            string status = DoXPayTokenCall(baseUri, resourcePath, queryString, "POST", "Cybersouce Payments Authorization Test", paymentAuthorizationRequest);
+            string status = abstractVisaAPIClient.DoXPayTokenCall(baseUri, resourcePath, queryString, "POST", "Cybersouce Payments Authorization Test", paymentAuthorizationRequest);
             Assert.AreEqual(status, "Created");
         }
     }

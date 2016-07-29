@@ -1,14 +1,26 @@
-from visa.test.helpers.vdp_client_utils import VDPTestCaseClient
+from visa.helpers.abstract_visa_api_client import AbstractVisaAPIClient
 import json
 import datetime
+import unittest
+import sys
+import os
+if sys.version_info < (3, 0):
+    import ConfigParser as parser
+else:
+    import configparser as parser
 '''
 @author: visa
 '''
 
-class TestManageCustomers(VDPTestCaseClient):
+class TestManageCustomers(unittest.TestCase):
+    
+    config = parser.ConfigParser()
+    config_path = os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(__file__)),'..','configuration.ini'))
+    config.read(config_path)
     
     def setUp(self):
         date = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+        self.abstract_visa_api_client = AbstractVisaAPIClient()
         self.create_customer_request = json.loads('''{
     "customer": {
         "cards": [
@@ -128,6 +140,6 @@ class TestManageCustomers(VDPTestCaseClient):
     def test_get_customers(self):
         base_uri = 'vta/'
         resource_path = 'v3/communities/'+ self.config.get('VDP','vtaCommunityCode') +"/customers";
-        response = self.do_mutual_auth_request(base_uri + resource_path, self.create_customer_request, 'Create Customers Test', 'post', {'ServiceId' : self.config.get('VDP','vtaServiceId')})
+        response = self.abstract_visa_api_client.do_mutual_auth_request(base_uri + resource_path, self.create_customer_request, 'Create Customers Test', 'post', {'ServiceId' : self.config.get('VDP','vtaServiceId')})
         self.assertEqual(str(response.status_code) ,"201" ,"Create Customers Test failed")
         pass

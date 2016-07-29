@@ -4,13 +4,15 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Vdp
 {
     [TestClass]
-    public class UpdatePaymentInformationTest : AbstractClient
+    public class UpdatePaymentInformationTest
     {
         private string apikey;
         private string updatePaymentInfoRequest;
+        private AbstractVisaAPIClient abstractVisaAPIClient;
 
         public UpdatePaymentInformationTest()
         {
+            abstractVisaAPIClient = new AbstractVisaAPIClient();
             apikey = ConfigurationManager.AppSettings["apiKey"];
             updatePaymentInfoRequest = "{"
                          + "\"orderInfo\": {"
@@ -37,7 +39,7 @@ namespace Vdp
             string resourcePath = "payment/info/{callId}";
             resourcePath = resourcePath.Replace("{callId}", ConfigurationManager.AppSettings["checkoutCallId"]);
             string queryString = "apikey=" + apikey;
-            string status = DoXPayTokenCall(baseUri, resourcePath, queryString, "PUT", "Update Payment Information Test", updatePaymentInfoRequest);
+            string status = abstractVisaAPIClient.DoXPayTokenCall(baseUri, resourcePath, queryString, "PUT", "Update Payment Information Test", updatePaymentInfoRequest);
             Assert.AreEqual(status, "OK");
         }
     }

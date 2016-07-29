@@ -2,6 +2,7 @@ package com.visa.vdp.merchantlocator;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.TimeZone;
 
 import org.apache.http.HttpStatus;
@@ -10,15 +11,17 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import com.visa.vdp.utils.AbstractClient;
+import com.visa.vdp.utils.AbstractVisaAPIClient;
+import com.visa.vdp.utils.MethodTypes;
 
-public class TestMerchantLocatorAPI extends AbstractClient{
+public class TestMerchantLocatorAPI {
 
     String locatorRequest;
+    AbstractVisaAPIClient abstractVisaAPIClient;
 
     @BeforeTest(groups = "merchantlocator")
     public void setup() {
-        
+    	this.abstractVisaAPIClient = new AbstractVisaAPIClient();
         SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
         TimeZone utc = TimeZone.getTimeZone("UTC");
         sdfDate.setTimeZone(utc);
@@ -55,7 +58,7 @@ public class TestMerchantLocatorAPI extends AbstractClient{
         String baseUri = "merchantlocator/";
         String resourcePath = "v1/locator";
         
-        CloseableHttpResponse response = doMutualAuthPostRequest(baseUri + resourcePath, "Merchant Locator Test", this.locatorRequest);
+        CloseableHttpResponse response = this.abstractVisaAPIClient.doMutualAuthRequest(baseUri + resourcePath, "Merchant Locator Test", this.locatorRequest, MethodTypes.POST, new HashMap<String, String>());
         Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK);
         response.close();
     }

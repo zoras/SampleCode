@@ -2,9 +2,11 @@
 
 namespace Vdp;
 
-class VisaTravelNotificationService extends HttpClient {
+class VisaTravelNotificationService extends \PHPUnit_Framework_TestCase {
 	
 	public function setUp() {
+		$this->conf = parse_ini_file ( "configuration.ini", true );
+		$this->abstractVisaAPIClient = new AbstractVisaAPIClient;
 		$departureDate = date('Y-m-d', time());
 		$returnDate = strtotime("+10 day", strtotime($departureDate));
 		$returnDate = date('Y-m-d', $returnDate);
@@ -28,7 +30,7 @@ class VisaTravelNotificationService extends HttpClient {
 	public function testAddTravelItenary() {
 		$baseUrl = "travelnotificationservice/";
 		$resourcePath = "v1/travelnotification/itinerary";
-		$statusCode = $this->doMutualAuthCall ( 'post', $baseUrl.$resourcePath, 'Add Travel Itenary Test', $this->locatorRequest );
+		$statusCode = $this->abstractVisaAPIClient->doMutualAuthCall ( 'post', $baseUrl.$resourcePath, 'Add Travel Itenary Test', $this->locatorRequest );
 		$this->assertEquals($statusCode, "200");
 	}
 }

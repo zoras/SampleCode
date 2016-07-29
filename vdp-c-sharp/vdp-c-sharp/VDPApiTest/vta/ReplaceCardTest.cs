@@ -6,12 +6,14 @@ using System.Collections.Generic;
 namespace Vdp
 {
     [TestClass]
-    public class ReplaceCardTest : AbstractClient
+    public class ReplaceCardTest
     {
         string replaceCardsRequest;
+        private AbstractVisaAPIClient abstractVisaAPIClient;
 
         public ReplaceCardTest()
         {
+            abstractVisaAPIClient = new AbstractVisaAPIClient();
             string strDate = DateTime.UtcNow.ToString("yyyy-MM-ddThh:mm:ss.fffZ");
             replaceCardsRequest = "{"
                          + "\"communityCode\": \"" + ConfigurationManager.AppSettings["vtaCommunityCode"] + "\","
@@ -67,7 +69,7 @@ namespace Vdp
             string resourcePath = "v3/communities/" + ConfigurationManager.AppSettings["vtaCommunityCode"] + "/cards";
             Dictionary<string, string> headers = new Dictionary<string, string>();
             headers.Add("ServiceId", ConfigurationManager.AppSettings["vtaServiceId"]);
-            string status = DoMutualAuthCall(baseUri + resourcePath, "POST", "Replace a card test", replaceCardsRequest, headers);
+            string status = abstractVisaAPIClient.DoMutualAuthCall(baseUri + resourcePath, "POST", "Replace a card test", replaceCardsRequest, headers);
             Assert.AreEqual(status, "Created");
         }
     }

@@ -2,10 +2,13 @@
 
 namespace Vdp;
 
-class ManageCustomersTest extends HttpClient {
+class ManageCustomersTest extends \PHPUnit_Framework_TestCase {
 	
 	public function setUp() {
+		$this->conf = parse_ini_file ( "configuration.ini", true );
 		$strDate = date('Y-m-d\TH:i:s.z\Z', time());
+		$this->abstractVisaAPIClient = new AbstractVisaAPIClient;
+		
 		$this->createCustomersRequest = json_encode ([
 				"customer" => [
 					"cards" => [
@@ -126,7 +129,7 @@ class ManageCustomersTest extends HttpClient {
 	public function testGetCustomerDetails() {
 		$baseUrl = "vta/";
 		$resourcePath = "v3/communities/".$this->conf['VDP'] ['vtaCommunityCode']."/customers";
-		$statusCode = $this->doMutualAuthCall( 'post', $baseUrl.$resourcePath, 'Create Customers Test', $this->createCustomersRequest, array("ServiceId: ".$this->conf['VDP'] ['vtaServiceId'] ));
+		$statusCode = $this->abstractVisaAPIClient->doMutualAuthCall( 'post', $baseUrl.$resourcePath, 'Create Customers Test', $this->createCustomersRequest, array("ServiceId: ".$this->conf['VDP'] ['vtaServiceId'] ));
 		$this->assertEquals($statusCode, "201");
 	}
 }

@@ -5,12 +5,14 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Vdp
 {
     [TestClass]
-    public class VisaTravelNotificationServiceTest : AbstractClient
+    public class VisaTravelNotificationServiceTest
     {
         private string travelNotificationRequest;
+        private AbstractVisaAPIClient abstractVisaAPIClient;
 
         public VisaTravelNotificationServiceTest()
         {
+            abstractVisaAPIClient = new AbstractVisaAPIClient();
             string departureDate = DateTime.UtcNow.ToString("yyyy-MM-dd");
             string returnDate = DateTime.Now.AddDays(7).ToString("yyyy-MM-dd");
             travelNotificationRequest =
@@ -36,7 +38,7 @@ namespace Vdp
         {
             string baseUri = "travelnotificationservice/";
             string resourcePath = "v1/travelnotification/itinerary";
-            string status = DoMutualAuthCall(baseUri + resourcePath, "POST", "Add Travel Itenary Test", travelNotificationRequest);
+            string status = abstractVisaAPIClient.DoMutualAuthCall(baseUri + resourcePath, "POST", "Add Travel Itenary Test", travelNotificationRequest);
             Assert.AreEqual(status, "OK");
         }
     }

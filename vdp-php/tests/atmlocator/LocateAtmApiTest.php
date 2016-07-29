@@ -2,10 +2,11 @@
 
 namespace Vdp;
 
-class LocateAtmApiTest extends HttpClient {
+class LocateAtmApiTest extends \PHPUnit_Framework_TestCase {
 	
 	public function setUp() {
 		$strDate = date('Y-m-d\TH:i:s.z\Z', time());
+		$this->abstractVisaAPIClient = new AbstractVisaAPIClient;
 		$this->atmInquiryRequest = json_encode ([
 		  "requestData" => [
 			    "culture" => "en-US",
@@ -98,7 +99,7 @@ class LocateAtmApiTest extends HttpClient {
 	public function testAtmInquiry() {
 		$baseUrl = "globalatmlocator/";
 		$resourcePath = "v1/localatms/atmsinquiry";
-		$statusCode = $this->doMutualAuthCall ( 'post', $baseUrl.$resourcePath, 'ATM Locator test', $this->atmInquiryRequest );
+		$statusCode = $this->abstractVisaAPIClient->doMutualAuthCall ( 'post', $baseUrl.$resourcePath, 'ATM Locator test', $this->atmInquiryRequest );
 		$this->assertEquals($statusCode, "200");
 	}
 }

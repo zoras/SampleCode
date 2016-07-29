@@ -2,6 +2,7 @@ package com.visa.vdp.mlc;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.TimeZone;
 
 import org.apache.http.HttpStatus;
@@ -10,16 +11,19 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import com.visa.vdp.utils.AbstractClient;
+import com.visa.vdp.utils.AbstractVisaAPIClient;
+import com.visa.vdp.utils.MethodTypes;
 import com.visa.vdp.utils.Property;
 import com.visa.vdp.utils.VisaProperties;
 
-public class TestLocationUpdate extends AbstractClient {
+public class TestLocationUpdate {
 
 	String locationsRequestBody;
+	AbstractVisaAPIClient abstractVisaAPIClient;
 
 	@BeforeTest(groups = "mlc")
 	public void setup() {
+		this.abstractVisaAPIClient = new AbstractVisaAPIClient();
 		SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 		TimeZone utc = TimeZone.getTimeZone("UTC");
 		sdfDate.setTimeZone(utc);
@@ -51,7 +55,7 @@ public class TestLocationUpdate extends AbstractClient {
 	    String baseUri = "mlc/";
 	    String resourcePath = "locationupdate/v1/locations";
 
-	    CloseableHttpResponse response = doMutualAuthPostRequest(baseUri + resourcePath,"Locations Update Test", this.locationsRequestBody);
+	    CloseableHttpResponse response = this.abstractVisaAPIClient.doMutualAuthRequest(baseUri + resourcePath,"Locations Update Test", this.locationsRequestBody, MethodTypes.POST, new HashMap<String, String>());
 	    Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK);
 	    response.close();
 	}

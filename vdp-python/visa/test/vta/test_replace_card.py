@@ -1,12 +1,24 @@
-from visa.test.helpers.vdp_client_utils import VDPTestCaseClient
+from visa.helpers.abstract_visa_api_client import AbstractVisaAPIClient
 import json
+import unittest
+import sys
+import os
+if sys.version_info < (3, 0):
+    import ConfigParser as parser
+else:
+    import configparser as parser
 '''
 @author: visa
 '''
 
-class TestReplaceCard(VDPTestCaseClient):
+class TestReplaceCard(unittest.TestCase):
+    
+    config = parser.ConfigParser()
+    config_path = os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(__file__)),'..','configuration.ini'))
+    config.read(config_path)
     
     def setUp(self):
+        self.abstract_visa_api_client = AbstractVisaAPIClient()
         self.replace_cards_request = json.loads('''{
             "communityCode": "''' + self.config.get('VDP','vtaCommunityCode') + '''",
             "newCard": {
@@ -56,6 +68,6 @@ class TestReplaceCard(VDPTestCaseClient):
     def test_get_communities(self):
         base_uri = 'vta/'
         resource_path = 'v3/communities/' +  self.config.get('VDP','vtaCommunityCode') + '/cards'
-        response = self.do_mutual_auth_request(base_uri + resource_path, self.replace_cards_request, 'Replace a card test', 'post', {'ServiceId' : self.config.get('VDP','vtaServiceId')})
+        response = self.abstract_visa_api_client.do_mutual_auth_request(base_uri + resource_path, self.replace_cards_request, 'Replace a card test', 'post', {'ServiceId' : self.config.get('VDP','vtaServiceId')})
         self.assertEqual(str(response.status_code) ,"201" ,"Replace a card test failed")
         pass

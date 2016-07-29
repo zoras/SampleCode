@@ -1,12 +1,6 @@
 package com.visa.vdp.visacheckout;
 
-import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SignatureException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
+import java.util.HashMap;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -15,17 +9,20 @@ import org.apache.http.HttpStatus;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import com.visa.vdp.utils.AbstractClient;
+import com.visa.vdp.utils.AbstractVisaAPIClient;
+import com.visa.vdp.utils.MethodTypes;
 import com.visa.vdp.utils.Property;
 import com.visa.vdp.utils.VisaProperties;
 
-public class TestUpdatePaymentInformation extends AbstractClient {
+public class TestUpdatePaymentInformation {
 
 	 String apiKey;
 	 String updatePaymentInfoRequest;
+	 AbstractVisaAPIClient abstractVisaAPIClient;
 	 
 	 @BeforeTest(groups = "visacheckout")
 	 public void setup() {
+		 this.abstractVisaAPIClient = new AbstractVisaAPIClient();
 		 this.apiKey = VisaProperties.getProperty(Property.API_KEY);
 		 this.updatePaymentInfoRequest = "{"
 		                 + "\"orderInfo\": {"
@@ -46,12 +43,12 @@ public class TestUpdatePaymentInformation extends AbstractClient {
 	 }
 	 
 	 @Test(groups = "visacheckout")
-	 public void testUpdatePaymentInfo() throws SignatureException, IOException, KeyManagementException, UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException, CertificateException {
+	 public void testUpdatePaymentInfo() throws Exception {
 	     String baseUri = "wallet-services-web/";
 	     String resourcePath = "payment/info/{callId}";
 	     resourcePath = StringUtils.replace(resourcePath, "{callId}", VisaProperties.getProperty(Property.CHECKOUT_CALL_ID));
 	     
-	     CloseableHttpResponse response = doXPayTokenPutRequest(baseUri, resourcePath, "apikey=" + this.apiKey, "Update Payment Information Test", this.updatePaymentInfoRequest);
+	     CloseableHttpResponse response = this.abstractVisaAPIClient.doXPayTokenRequest(baseUri, resourcePath, "apikey=" + this.apiKey, "Update Payment Information Test", this.updatePaymentInfoRequest, MethodTypes.PUT, new HashMap<String, String>());
 	     Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK);
 	     response.close();
 	 }

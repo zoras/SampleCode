@@ -4,12 +4,14 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Vdp
 {
     [TestClass]
-    public class MerchantSearchAPITest : AbstractClient
+    public class MerchantSearchAPITest
     {
         private string searchRequest;
+        private AbstractVisaAPIClient abstractVisaAPIClient;
 
         public MerchantSearchAPITest()
         {
+            abstractVisaAPIClient = new AbstractVisaAPIClient();
             string strDate = DateTime.UtcNow.ToString("yyyy-MM-ddThh:mm:ss.fff");
             searchRequest =
                  "{"
@@ -53,7 +55,7 @@ namespace Vdp
         {
             string baseUri = "merchantsearch/";
             string resourcePath = "v1/search";
-            string status = DoMutualAuthCall(baseUri + resourcePath, "POST", "Merchant Search API Test", searchRequest);
+            string status = abstractVisaAPIClient.DoMutualAuthCall(baseUri + resourcePath, "POST", "Merchant Search API Test", searchRequest);
             Assert.AreEqual(status, "OK");
         }
     }

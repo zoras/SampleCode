@@ -2,18 +2,24 @@ package com.visa.vdp.foreignexchange;
 
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.testng.Assert;
+
+import java.util.HashMap;
+
 import org.apache.http.HttpStatus;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import com.visa.vdp.utils.AbstractClient;
+import com.visa.vdp.utils.AbstractVisaAPIClient;
+import com.visa.vdp.utils.MethodTypes;
 
-public class TestForeignExchangeRates extends AbstractClient{
+public class TestForeignExchangeRates {
 
 	String foreignExchangeRequest;
+	AbstractVisaAPIClient abstractVisaAPIClient;
 
 	@BeforeTest(groups = "foreignExchange")
 	public void setup() {
+		this.abstractVisaAPIClient = new AbstractVisaAPIClient();
 		this.foreignExchangeRequest = 
 				"{"
 						  + "\"acquirerCountryCode\": \"840\","
@@ -44,7 +50,7 @@ public class TestForeignExchangeRates extends AbstractClient{
 	    String baseUri = "forexrates/";
 	    String resourcePath = "v1/foreignexchangerates";
 	    
-	    CloseableHttpResponse response = doMutualAuthPostRequest(baseUri + resourcePath, "Foreign Exchange Test", this.foreignExchangeRequest);
+	    CloseableHttpResponse response = this.abstractVisaAPIClient.doMutualAuthRequest(baseUri + resourcePath, "Foreign Exchange Test", this.foreignExchangeRequest, MethodTypes.POST, new HashMap<String, String>());
 	    Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK);
 	    response.close();
 	}

@@ -3,12 +3,14 @@
 namespace Vdp
 {
     [TestClass]
-    public class WatchListScreeningTest : AbstractClient
+    public class WatchListScreeningTest
     {
         private string watchListInquiry;
+        private AbstractVisaAPIClient abstractVisaAPIClient;
 
         public WatchListScreeningTest()
         {
+            abstractVisaAPIClient = new AbstractVisaAPIClient();
             watchListInquiry =
            "{"
                  + "\"acquirerCountryCode\": \"840\","
@@ -27,7 +29,7 @@ namespace Vdp
         {
             string baseUri = "visadirect/";
             string resourcePath = "watchlistscreening/v1/watchlistinquiry";
-            string status = DoMutualAuthCall(baseUri + resourcePath, "POST", "Watch List Inquiry Test", watchListInquiry);
+            string status = abstractVisaAPIClient.DoMutualAuthCall(baseUri + resourcePath, "POST", "Watch List Inquiry Test", watchListInquiry);
             Assert.AreEqual(status, "OK");
         }
     }

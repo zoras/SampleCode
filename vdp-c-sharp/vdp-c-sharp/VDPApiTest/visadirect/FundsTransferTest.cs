@@ -4,12 +4,14 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Vdp
 {
     [TestClass]
-    public class FundsTransferTest : AbstractClient
+    public class FundsTransferTest
     {
         private string pushFundsRequest;
+        private AbstractVisaAPIClient abstractVisaAPIClient;
 
         public FundsTransferTest()
         {
+            abstractVisaAPIClient = new AbstractVisaAPIClient();
             string strDate = DateTime.UtcNow.ToString("yyyy-MM-ddThh:mm:ss");
             pushFundsRequest =
             "{"
@@ -51,7 +53,7 @@ namespace Vdp
         {
             string baseUri = "visadirect/";
             string resourcePath = "fundstransfer/v1/pushfundstransactions/";
-            string status = DoMutualAuthCall(baseUri + resourcePath, "POST", "Push Funds Transaction Test", pushFundsRequest);
+            string status = abstractVisaAPIClient.DoMutualAuthCall(baseUri + resourcePath, "POST", "Push Funds Transaction Test", pushFundsRequest);
             Assert.AreEqual(status, "OK");
         }
     }

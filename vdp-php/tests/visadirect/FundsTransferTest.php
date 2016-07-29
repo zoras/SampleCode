@@ -2,9 +2,10 @@
 
 namespace Vdp;
 
-class FundsTransferTest extends HttpClient {
+class FundsTransferTest extends \PHPUnit_Framework_TestCase {
 	
 	public function setUp() {
+		$this->abstractVisaAPIClient = new AbstractVisaAPIClient;
 		$strDate = date('Y-m-d\TH:i:s', time());
 		$this->fundsTransferRequest = json_encode ( [ 
 				'systemsTraceAuditNumber' => 300259,
@@ -51,7 +52,7 @@ class FundsTransferTest extends HttpClient {
 	public function testPullFunds() {
 		$baseUrl = "visadirect/";
 		$resourcePath = "fundstransfer/v1/pullfundstransactions";
-		$statusCode = $this->doMutualAuthCall ( 'post', $baseUrl.$resourcePath, 'Push Funds Transaction Test', $this->fundsTransferRequest );
+		$statusCode = $this->abstractVisaAPIClient->doMutualAuthCall ( 'post', $baseUrl.$resourcePath, 'Push Funds Transaction Test', $this->fundsTransferRequest );
 		$this->assertEquals($statusCode, "200");
 	}
 }

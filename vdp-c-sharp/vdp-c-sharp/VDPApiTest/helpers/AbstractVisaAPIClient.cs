@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace Vdp
 {
-    public class AbstractClient
+    public class AbstractVisaAPIClient
     {
         private void LogRequest(string url, string requestBody)
         {
@@ -43,60 +43,15 @@ namespace Vdp
 
         }
 
-        protected string DoMutualAuthCall(string path, string method, string testInfo, string requestBodyString)
+        private string GetBasicAuthHeader(string userId, string password)
         {
-            string requestURL = ConfigurationManager.AppSettings["visaUrl"] + path;
-            string userId = ConfigurationManager.AppSettings["userId"];
-            string password = ConfigurationManager.AppSettings["password"];
-            string certificatePath = ConfigurationManager.AppSettings["cert"];
-            string certificatePassword = ConfigurationManager.AppSettings["certPassword"];
-            string statusCode = "";
-            LogRequest(requestURL, requestBodyString);
-            // Create the POST request object 
-            HttpWebRequest request = WebRequest.Create(requestURL) as HttpWebRequest;
-            request.Method = method;
-            if (method.Equals("POST") || method.Equals("PUT"))
-            {
-                request.ContentType = "application/json";
-                // Load the body for the post request
-                var requestStringBytes = Encoding.UTF8.GetBytes(requestBodyString);
-                request.GetRequestStream().Write(requestStringBytes, 0, requestStringBytes.Length);
-            }
-            request.Accept = "application/json";
-
-            // Add headers
             string authString = userId + ":" + password;
             var authStringBytes = Encoding.UTF8.GetBytes(authString);
             string authHeaderString = Convert.ToBase64String(authStringBytes);
-            request.Headers["Authorization"] = "Basic " + authHeaderString;
-            request.Headers["x-correlation-id"] = GetCorrelationId();
-
-            // Add certificate
-            var certificate = new X509Certificate2(certificatePath, certificatePassword);
-            request.ClientCertificates.Add(certificate);
-
-            try
-            {
-                // Make the call
-                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-                {
-                    LogResponse(testInfo, response);
-                    statusCode = response.StatusCode.ToString();
-                }
-            }
-            catch (WebException e)
-            {
-                if (e.Response is HttpWebResponse)
-                {
-                    HttpWebResponse response = (HttpWebResponse)e.Response;
-                    LogResponse(testInfo, response);
-                    statusCode = response.StatusCode.ToString();
-                }
-            }
-            return statusCode;
+            return "Basic " + authHeaderString;
         }
 
-        protected string DoMutualAuthCall(string path, string method, string testInfo, string requestBodyString, Dictionary<string, string> headers)
+        public string DoMutualAuthCall(string path, string method, string testInfo, string requestBodyString, Dictionary<string, string> headers = null)
         {
             string requestURL = ConfigurationManager.AppSettings["visaUrl"] + path;
             string userId = ConfigurationManager.AppSettings["userId"];
@@ -111,20 +66,22 @@ namespace Vdp
             if (method.Equals("POST") || method.Equals("PUT"))
             {
                 request.ContentType = "application/json";
+                request.Accept = "application/json";
                 // Load the body for the post request
                 var requestStringBytes = Encoding.UTF8.GetBytes(requestBodyString);
                 request.GetRequestStream().Write(requestStringBytes, 0, requestStringBytes.Length);
             }
-            request.Accept = "application/json";
-            foreach (KeyValuePair<string, string> header in headers)
+
+            if (headers != null)
             {
-                request.Headers[header.Key] = header.Value;
+                foreach (KeyValuePair<string, string> header in headers)
+                {
+                    request.Headers[header.Key] = header.Value;
+                }
             }
+            
             // Add headers
-            string authString = userId + ":" + password;
-            var authStringBytes = Encoding.UTF8.GetBytes(authString);
-            string authHeaderString = Convert.ToBase64String(authStringBytes);
-            request.Headers["Authorization"] = "Basic " + authHeaderString;
+            request.Headers["Authorization"] = GetBasicAuthHeader(userId, password);
             request.Headers["x-correlation-id"] = GetCorrelationId();
             // Add certificate
             var certificate = new X509Certificate2(certificatePath, certificatePassword);
@@ -151,7 +108,7 @@ namespace Vdp
             return statusCode;
         }
 
-        protected string DoXPayTokenCall(string baseUri, string resourcePath, string queryString, string method, string testInfo, string requestBodyString)
+        public string DoXPayTokenCall(string baseUri, string resourcePath, string queryString, string method, string testInfo, string requestBodyString)
         {
             string requestURL = ConfigurationManager.AppSettings["visaUrl"] + baseUri + resourcePath + "?" + queryString;
             string apikey = ConfigurationManager.AppSettings["apiKey"];
@@ -163,11 +120,12 @@ namespace Vdp
             if (method.Equals("POST") || method.Equals("PUT"))
             {
                 request.ContentType = "application/json";
+                request.Accept = "application/json";
                 // Load the body for the post request
                 var requestStringBytes = Encoding.UTF8.GetBytes(requestBodyString);
                 request.GetRequestStream().Write(requestStringBytes, 0, requestStringBytes.Length);
             }
-            request.Accept = "application/json";
+
             string xPayToken = GetXPayToken(resourcePath, "apikey=" + apikey, requestBodyString);
             request.Headers["x-pay-token"] = xPayToken;
             request.Headers["x-correlation-id"] = GetCorrelationId();

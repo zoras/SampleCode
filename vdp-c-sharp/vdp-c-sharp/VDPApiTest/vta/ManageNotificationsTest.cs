@@ -5,12 +5,14 @@ using System.Collections.Generic;
 namespace Vdp
 {
     [TestClass]
-    public class ManageNotificationsTest : AbstractClient
+    public class ManageNotificationsTest
     {
         string notificationSubscriptionRequest;
+        private AbstractVisaAPIClient abstractVisaAPIClient;
 
         public ManageNotificationsTest()
         {
+            abstractVisaAPIClient = new AbstractVisaAPIClient();
             notificationSubscriptionRequest = "{"
                         + "\"contactType\":  \"" + ConfigurationManager.AppSettings["vtaNotificationContactType"] + "\","
                         + "\"contactValue\":  \"john@visa.com\","
@@ -34,7 +36,7 @@ namespace Vdp
                 + "/customers/" + ConfigurationManager.AppSettings["vtaCustomerId"] + "/notifications";
             Dictionary<string, string> headers = new Dictionary<string, string>();
             headers.Add("ServiceId", ConfigurationManager.AppSettings["vtaServiceId"]);
-            string status = DoMutualAuthCall(baseUri + resourcePath, "POST", "Notification Subscriptions Test", notificationSubscriptionRequest, headers);
+            string status = abstractVisaAPIClient.DoMutualAuthCall(baseUri + resourcePath, "POST", "Notification Subscriptions Test", notificationSubscriptionRequest, headers);
             Assert.AreEqual(status, "Created");
         }
     }

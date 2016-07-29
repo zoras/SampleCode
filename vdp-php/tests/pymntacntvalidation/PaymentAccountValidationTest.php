@@ -2,9 +2,10 @@
 
 namespace Vdp;
 
-class PaymentAccountValidationTest extends HttpClient {
+class PaymentAccountValidationTest extends \PHPUnit_Framework_TestCase {
 	
 	public function setUp() {
+		$this->abstractVisaAPIClient = new AbstractVisaAPIClient;
 		$this->paymentAccountValidation = json_encode ([
 		  "acquirerCountryCode" => "840",
 		  "acquiringBin" => "408999",
@@ -35,7 +36,7 @@ class PaymentAccountValidationTest extends HttpClient {
 	public function testCardValidation() {
 		$baseUrl = "pav/";
 		$resourcePath = "v1/cardvalidation";
-		$statusCode = $this->doMutualAuthCall ( 'post', $baseUrl.$resourcePath, 'Card Validation call', $this->paymentAccountValidation );
+		$statusCode = $this->abstractVisaAPIClient->doMutualAuthCall ( 'post', $baseUrl.$resourcePath, 'Card Validation call', $this->paymentAccountValidation );
 		$this->assertEquals($statusCode, "200");
 	}
 }

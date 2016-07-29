@@ -1,22 +1,25 @@
 package com.visa.vdp.visadirect;
 
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.log4j.Logger;
 import org.testng.Assert;
+
+import java.util.HashMap;
+
 import org.apache.http.HttpStatus;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import com.visa.vdp.utils.AbstractClient;
+import com.visa.vdp.utils.AbstractVisaAPIClient;
+import com.visa.vdp.utils.MethodTypes;
 
-public class TestWatchListScreening extends AbstractClient {
+public class TestWatchListScreening {
 	
 	String watchListInquiry;
-
-	final static Logger logger = Logger.getLogger(TestWatchListScreening.class);
+	AbstractVisaAPIClient abstractVisaAPIClient;
 	
 	@BeforeTest(groups = "visadirect")
 	public void setup() {
+		this.abstractVisaAPIClient = new AbstractVisaAPIClient();
 		this.watchListInquiry = 
 			"{"
 			     + "\"acquirerCountryCode\": \"840\","
@@ -35,7 +38,7 @@ public class TestWatchListScreening extends AbstractClient {
 	    String baseUri = "visadirect/";
 	    String resourcePath = "watchlistscreening/v1/watchlistinquiry";
 	    
-	    CloseableHttpResponse response = doMutualAuthPostRequest(baseUri + resourcePath, "Watch List Inquiry Test", this.watchListInquiry);
+	    CloseableHttpResponse response = this.abstractVisaAPIClient.doMutualAuthRequest(baseUri + resourcePath, "Watch List Inquiry Test", this.watchListInquiry, MethodTypes.POST, new HashMap<String, String>());
 	    Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK);
 	    response.close();
 	}

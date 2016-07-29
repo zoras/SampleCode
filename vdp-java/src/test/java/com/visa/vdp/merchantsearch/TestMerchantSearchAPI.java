@@ -2,6 +2,7 @@ package com.visa.vdp.merchantsearch;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.TimeZone;
 
 import org.apache.http.HttpStatus;
@@ -10,15 +11,17 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import com.visa.vdp.utils.AbstractClient;
+import com.visa.vdp.utils.AbstractVisaAPIClient;
+import com.visa.vdp.utils.MethodTypes;
 
-public class TestMerchantSearchAPI extends AbstractClient{
+public class TestMerchantSearchAPI {
 
     String searchRequest;
+    AbstractVisaAPIClient abstractVisaAPIClient;
 
     @BeforeTest(groups = "merchantsearch")
     public void setup() {
-        
+    	this.abstractVisaAPIClient = new AbstractVisaAPIClient();
         SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
         TimeZone utc = TimeZone.getTimeZone("UTC");
         sdfDate.setTimeZone(utc);
@@ -66,7 +69,7 @@ public class TestMerchantSearchAPI extends AbstractClient{
         String baseUri = "merchantsearch/";
         String resourcePath = "v1/search";
         
-        CloseableHttpResponse response = doMutualAuthPostRequest(baseUri + resourcePath, "Merchant Search API Test", this.searchRequest);
+        CloseableHttpResponse response = this.abstractVisaAPIClient.doMutualAuthRequest(baseUri + resourcePath, "Merchant Search API Test", this.searchRequest, MethodTypes.POST, new HashMap<String, String>());
         Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK);
         response.close();
     }

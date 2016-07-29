@@ -1,12 +1,24 @@
-from visa.test.helpers.vdp_client_utils import VDPTestCaseClient
+from visa.helpers.abstract_visa_api_client import AbstractVisaAPIClient
 import json
+import sys
+import os
+import unittest
+if sys.version_info < (3, 0):
+    import ConfigParser as parser
+else:
+    import configparser as parser
 '''
 @author: visa
 '''
 
-class TestCardEnrollement(VDPTestCaseClient):
+class TestCardEnrollement(unittest.TestCase):
 
+    config = parser.ConfigParser()
+    config_path = os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(__file__)),'..','configuration.ini'))
+    config.read(config_path)
+    
     def setUp(self):
+        self.abstract_visa_api_client = AbstractVisaAPIClient()
         self.enrollement_data = json.loads('''{
                     "enrollmentMessageType": "enroll",
                     "enrollmentRequest": {
@@ -21,6 +33,6 @@ class TestCardEnrollement(VDPTestCaseClient):
     def test_enrollement(self):
         base_uri = 'mlc/'
         resource_path = 'enrollment/v1/enrollments'
-        response = self.do_mutual_auth_request(base_uri + resource_path, self.enrollement_data, 'MLC Card Enrollement Test', 'post')
+        response = self.abstract_visa_api_client.do_mutual_auth_request(base_uri + resource_path, self.enrollement_data, 'MLC Card Enrollement Test', 'post')
         self.assertEqual(str(response.status_code) ,"200" ,"MLC enrollment's test failed")
         pass

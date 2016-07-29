@@ -1,14 +1,16 @@
-from visa.test.helpers.vdp_client_utils import VDPTestCaseClient
+from visa.helpers.abstract_visa_api_client import AbstractVisaAPIClient
 import json
 import datetime
+import unittest
 '''
 @author: visa
 '''
 
-class TestMVisa(VDPTestCaseClient):
+class TestMVisa(unittest.TestCase):
 
     def setUp(self):
         date = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+        self.abstract_visa_api_client = AbstractVisaAPIClient()
         self.m_visa_transaction_request = json.loads('''{
             "acquirerCountryCode": "643",
             "acquiringBin": "400171",
@@ -37,6 +39,6 @@ class TestMVisa(VDPTestCaseClient):
     def test_mVisa_transactions(self):
         base_uri = 'visadirect/'
         resource_path = 'mvisa/v1/cashinpushpayments'
-        response = self.do_mutual_auth_request(base_uri + resource_path, self.m_visa_transaction_request, 'M Visa Transaction Test','post')
+        response = self.abstract_visa_api_client.do_mutual_auth_request(base_uri + resource_path, self.m_visa_transaction_request, 'M Visa Transaction Test','post')
         self.assertEqual(str(response.status_code) ,"200" ,"M Visa Transaction test failed")
         pass

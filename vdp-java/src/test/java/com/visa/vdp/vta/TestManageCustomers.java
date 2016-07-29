@@ -1,12 +1,5 @@
 package com.visa.vdp.vta;
 
-import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SignatureException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,22 +7,23 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.log4j.Logger;
 import org.testng.Assert;
 import org.apache.http.HttpStatus;
 import org.testng.annotations.Test;
 
-import com.visa.vdp.utils.AbstractClient;
+import com.visa.vdp.utils.AbstractVisaAPIClient;
+import com.visa.vdp.utils.MethodTypes;
 import com.visa.vdp.utils.Property;
 import com.visa.vdp.utils.VisaProperties;
 
-public class TestManageCustomers extends AbstractClient {
+public class TestManageCustomers {
 
-     final static Logger logger = Logger.getLogger(TestManageCustomers.class);
-     private String createCustomerRequest;
+     String createCustomerRequest;
+     AbstractVisaAPIClient abstractVisaAPIClient;
      
      @Test(groups = "vta")
      public void setUp() {
+    	 this.abstractVisaAPIClient = new AbstractVisaAPIClient();
          SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
          TimeZone utc = TimeZone.getTimeZone("UTC");
          sdfDate.setTimeZone(utc);
@@ -153,13 +147,13 @@ public class TestManageCustomers extends AbstractClient {
      }
      
      @Test(groups = "vta")
-     public void testGetCustomerDetails() throws SignatureException, IOException, KeyManagementException, UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException, CertificateException {
+     public void testGetCustomerDetails() throws Exception {
          String baseUri = "vta/";
          String resourcePath = "v3/communities/"+VisaProperties.getProperty(Property.VTA_COMMUNITY_CODE) +"/customers";
 
          Map<String,String> headers = new HashMap<String,String>();
          headers.put("ServiceId", VisaProperties.getProperty(Property.VTA_SERVICE_ID));
-         CloseableHttpResponse response = doMutualAuthPostRequest(baseUri + resourcePath, "Create Customer Test", this.createCustomerRequest, headers);
+         CloseableHttpResponse response = this.abstractVisaAPIClient.doMutualAuthRequest(baseUri + resourcePath, "Create Customer Test", this.createCustomerRequest, MethodTypes.POST, headers);
          Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED);
          response.close();
      }

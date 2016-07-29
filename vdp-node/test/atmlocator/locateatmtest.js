@@ -1,5 +1,6 @@
 var request = require('request');
 var fs = require('fs');
+var abstractVisaAPIClient = require('../../libs/abstractvisapiclient.js');
 var config = require('../../config/configuration.json');
 var assert = require('chai').assert;
 var randomstring = require('randomstring');
@@ -102,36 +103,16 @@ describe('ATM Locator test', function() {
 
 	it('Locate ATM Test', function(done) {
 		this.timeout(10000);
-		console.log("Request Body : " + JSON.stringify(JSON.parse(atmInquiryRequest), null, 4));
 		var baseUri = 'globalatmlocator/';
 		var resourcePath = 'v1/localatms/atmsinquiry';
-		console.log("URL : " + config.visaUrl + baseUri + resourcePath);
-		req.post({
-			uri : config.visaUrl + baseUri + resourcePath,
-			key: fs.readFileSync(keyFile),  
-			cert: fs.readFileSync(certificateFile),
-			headers: {
-				'Content-Type' : 'application/json',
-				'Accept' : 'application/json',
-				'Authorization' : 'Basic ' + new Buffer(userId + ':' + password).toString('base64'),
-				'x-correlation-id' : randomstring.generate({length:12, charset: 'alphanumeric'}) + '_SC'
-			},
-			body: atmInquiryRequest
-		}, function(error, response, body) {
-			if (!error) {
-				console.log("Response Code: " + response.statusCode);
-				console.log("Headers:");
-				for(var item in response.headers) {
-					console.log(item + ": " + response.headers[item]);
-				}
-				console.log("Body: "+ JSON.stringify(JSON.parse(body), null, 4));
-				assert.equal(response.statusCode, 200);
-			} else {
-				console.log(error);
-				assert(false);
-			}
-			done();
-		}
-		);
+		abstractVisaAPIClient.doMutualAuthRequest(baseUri + resourcePath, atmInquiryRequest, 'POST', {}, 
+		function(err, responseCode) {
+            if(!err) {
+                assert.equal(responseCode, 200);
+            } else {
+                assert(false);
+            }
+            done();
+        });
 	});
 });

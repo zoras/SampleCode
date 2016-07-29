@@ -1,7 +1,8 @@
 var request = require('request');
 var xPayUtil = require('../../libs/xpayutil.js');
+var abstractVisaAPIClient = require('../../libs/abstractvisapiclient.js');
 var config = require('../../config/configuration.json');
-var expect = require('chai').expect;
+var assert = require('chai').assert;
 var req = request.defaults();
 var randomstring = require('randomstring');
 
@@ -24,40 +25,21 @@ describe('Update Payment Information', function() {
           }
        });
 	
-	it('Update Payment Date Test',function(done){
+	it('Update Payment Data Test',function(done){
 		this.timeout(10000);
-		console.log("Request Body : " + JSON.stringify(JSON.parse(updatePaymentInfoRequest),null,4));
 		var apiKey = config.apiKey;
 		var baseUri = 'wallet-services-web/';
 		var resourcePath = 'payment/info/{callId}';
 		resourcePath = resourcePath.replace('{callId}', config.checkoutCallId);
 		var queryParams = 'apikey=' + apiKey;
-		console.log("URL :" + config.visaUrl + baseUri + resourcePath + '?' + queryParams);
-		req.put({
-			uri : config.visaUrl + baseUri + resourcePath + '?' + queryParams,
-			headers: {
-				'content-type' : 'application/json',
-				'x-pay-token' : xPayUtil.getXPayToken(resourcePath, queryParams, updatePaymentInfoRequest),
-				'x-correlation-id' : randomstring.generate({length:12, charset: 'alphanumeric'}) + '_SC'
-			},
-			body : updatePaymentInfoRequest
-		}, function(error, response, body) {
-			if (!error) {
-				console.log("Response Code: " + response.statusCode);
-				console.log("Headers:");
-				for(var item in response.headers) {
-					console.log(item + ": " + response.headers[item]);
-				}
-				if (body !== null && body !== '') {
-					console.log("Body: "+ JSON.stringify(JSON.parse(body), null, 4));
-				}
-				assert.equal(response.statusCode, 200);
+		abstractVisaAPIClient.doXPayRequest(baseUri, resourcePath, queryParams, updatePaymentInfoRequest, 'PUT', {}, 
+		function(err, responseCode) {
+			if(!err) {
+				assert.equal(responseCode, 200);
 			} else {
-				console.log(error);
 				assert(false);
 			}
 			done();
-		}
-		);
+		});
 	});
 });

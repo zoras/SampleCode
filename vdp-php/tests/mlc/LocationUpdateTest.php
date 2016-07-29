@@ -2,9 +2,11 @@
 
 namespace Vdp;
 
-class LocationUpdateTest extends HttpClient {
+class LocationUpdateTest extends \PHPUnit_Framework_TestCase {
 	
 	public function setUp() {
+		$this->conf = parse_ini_file ( "configuration.ini", true );
+		$this->abstractVisaAPIClient = new AbstractVisaAPIClient;
 		$strDate = date('Y-m-d\TH:i:s.z\Z', time());
 		$this->locationsRequestBody = json_encode ( [
 		  "accuracy" => "5000",
@@ -29,7 +31,7 @@ class LocationUpdateTest extends HttpClient {
 	public function testlocations() {
 		$baseUrl = "mlc/";
 		$resourcePath = "locationupdate/v1/locations";
-		$statusCode = $this->doMutualAuthCall ( 'post', $baseUrl.$resourcePath, 'Location Update Test', $this->locationsRequestBody );
+		$statusCode = $this->abstractVisaAPIClient->doMutualAuthCall ( 'post', $baseUrl.$resourcePath, 'Location Update Test', $this->locationsRequestBody );
 		$this->assertEquals($statusCode, "200");
 	}
 }

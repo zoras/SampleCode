@@ -2,9 +2,10 @@
 
 namespace Vdp;
 
-class ForeignExchangeTest extends HttpClient {
+class ForeignExchangeTest extends \PHPUnit_Framework_TestCase {
 	
 	public function setUp() {
+		$this->abstractVisaAPIClient = new AbstractVisaAPIClient;
 		$this->foreignExchangeRequest = json_encode ( [
 		  "acquirerCountryCode" => "840",
 		  "acquiringBin" => "408999",
@@ -31,7 +32,7 @@ class ForeignExchangeTest extends HttpClient {
 	public function testForeignExchangeRates() {
 		$baseUrl = "forexrates/";
 		$resourcePath = "v1/foreignexchangerates";
-		$statusCode = $this->doMutualAuthCall ( 'post', $baseUrl.$resourcePath, 'Foreign Exchange call', $this->foreignExchangeRequest );
+		$statusCode = $this->abstractVisaAPIClient->doMutualAuthCall ( 'post', $baseUrl.$resourcePath, 'Foreign Exchange call', $this->foreignExchangeRequest );
 		$this->assertEquals($statusCode, "200");
 	}
 }

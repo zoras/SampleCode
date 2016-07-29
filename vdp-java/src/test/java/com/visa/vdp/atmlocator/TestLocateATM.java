@@ -2,6 +2,7 @@ package com.visa.vdp.atmlocator;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -9,14 +10,17 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import com.visa.vdp.utils.AbstractClient;
+import com.visa.vdp.utils.AbstractVisaAPIClient;
+import com.visa.vdp.utils.MethodTypes;
 
-public class TestLocateATM extends AbstractClient {
+public class TestLocateATM {
     
     String atmInquiryRequest;
+    AbstractVisaAPIClient abstractVisaAPIClient;
 
     @BeforeTest(groups = "atmlocator")
     public void setup() {
+    	this.abstractVisaAPIClient = new AbstractVisaAPIClient();
         SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         Date now = new Date();
         String strDate = sdfDate.format(now);
@@ -114,7 +118,7 @@ public class TestLocateATM extends AbstractClient {
     public void testLocateATM() throws Exception {
         String baseUri = "globalatmlocator/";
         String resourcePath = "v1/localatms/atmsinquiry";
-        CloseableHttpResponse response = doMutualAuthPostRequest(baseUri + resourcePath, "Locate ATM Test", this.atmInquiryRequest);
+        CloseableHttpResponse response = this.abstractVisaAPIClient.doMutualAuthRequest(baseUri + resourcePath, "Locate ATM Test", this.atmInquiryRequest, MethodTypes.POST, new HashMap<String, String>());
         Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK);
         response.close();
     }

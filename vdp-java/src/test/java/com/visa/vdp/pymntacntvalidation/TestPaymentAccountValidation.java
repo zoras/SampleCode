@@ -4,15 +4,21 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-import org.apache.http.HttpStatus;
-import com.visa.vdp.utils.AbstractClient;
 
-public class TestPaymentAccountValidation extends AbstractClient{
+import java.util.HashMap;
+
+import org.apache.http.HttpStatus;
+import com.visa.vdp.utils.AbstractVisaAPIClient;
+import com.visa.vdp.utils.MethodTypes;
+
+public class TestPaymentAccountValidation {
 	
 	String paymentAccountValidation;
+	AbstractVisaAPIClient abstractVisaAPIClient;
 	
 	@BeforeTest(groups = "pav")
 	public void setup() {
+		this.abstractVisaAPIClient = new AbstractVisaAPIClient();
 		this.paymentAccountValidation = 
 				"{"
 						  + "\"acquirerCountryCode\": \"840\","
@@ -46,7 +52,7 @@ public class TestPaymentAccountValidation extends AbstractClient{
 	    String baseUri = "pav/";
 	    String resourcePath = "v1/cardvalidation";
 	    
-	    CloseableHttpResponse response = doMutualAuthPostRequest(baseUri + resourcePath, "Card Validation Test", this.paymentAccountValidation);
+	    CloseableHttpResponse response = this.abstractVisaAPIClient.doMutualAuthRequest(baseUri + resourcePath, "Card Validation Test", this.paymentAccountValidation, MethodTypes.POST, new HashMap<String, String>());
 	    Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK);
 	    response.close();
 	}

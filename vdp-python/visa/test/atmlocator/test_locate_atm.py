@@ -1,14 +1,16 @@
-from visa.test.helpers.vdp_client_utils import VDPTestCaseClient
+from visa.helpers.abstract_visa_api_client import AbstractVisaAPIClient
 import json
 import datetime
+import unittest
 '''
 @author: visa
 '''
 
-class TestATMLocator(VDPTestCaseClient):
+class TestATMLocator(unittest.TestCase):
 
     def setUp(self):
         date = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+        self.abstract_visa_api_client = AbstractVisaAPIClient()
         self.atm_inquiry_request = json.loads('''{
           "requestData": {
                 "culture": "en-US",
@@ -100,6 +102,6 @@ class TestATMLocator(VDPTestCaseClient):
     def test_locate_atm(self):
         base_uri = 'globalatmlocator/'
         resource_path = 'v1/localatms/atmsinquiry'
-        response = self.do_mutual_auth_request(base_uri + resource_path, self.atm_inquiry_request, 'ATM Locator test','post')
+        response = self.abstract_visa_api_client.do_mutual_auth_request(base_uri + resource_path, self.atm_inquiry_request, 'ATM Locator test','post')
         self.assertEqual(str(response.status_code) ,"200" ,"ATM Locator Test failed")
         pass

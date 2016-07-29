@@ -2,9 +2,10 @@
 
 namespace Vdp;
 
-class MerchantLocatorTest extends HttpClient {
+class MerchantLocatorTest extends \PHPUnit_Framework_TestCase {
 	
 	public function setUp() {
+		$this->abstractVisaAPIClient = new AbstractVisaAPIClient;
 		$strDate = date('Y-m-d\TH:i:s:z', time());
 		$this->locatorRequest = json_encode ([
                 "header" =>  [
@@ -34,7 +35,7 @@ class MerchantLocatorTest extends HttpClient {
 	public function testMerchantLocatorAPI() {
 		$baseUrl = "merchantlocator/";
 		$resourcePath = "v1/locator";
-		$statusCode = $this->doMutualAuthCall ( 'post', $baseUrl.$resourcePath, 'Merchant Locator Test', $this->locatorRequest );
+		$statusCode = $this->abstractVisaAPIClient->doMutualAuthCall ( 'post', $baseUrl.$resourcePath, 'Merchant Locator Test', $this->locatorRequest );
 		$this->assertEquals($statusCode, "200");
 	}
 }

@@ -4,12 +4,14 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Vdp
 {
     [TestClass]
-    public class MerchantLocatorAPITest : AbstractClient
+    public class MerchantLocatorAPITest
     {
         private string locatorRequest;
+        private AbstractVisaAPIClient abstractVisaAPIClient;
 
         public MerchantLocatorAPITest()
         {
+            abstractVisaAPIClient = new AbstractVisaAPIClient();
             string strDate = DateTime.UtcNow.ToString("yyyy-MM-ddThh:mm:ss.SSS");
             locatorRequest =
             "{"
@@ -42,7 +44,7 @@ namespace Vdp
         {
             string baseUri = "merchantlocator/";
             string resourcePath = "v1/locator";
-            string status = DoMutualAuthCall(baseUri + resourcePath, "POST", "Merchant Locator API Test", locatorRequest);
+            string status = abstractVisaAPIClient.DoMutualAuthCall(baseUri + resourcePath, "POST", "Merchant Locator API Test", locatorRequest);
             Assert.AreEqual(status, "OK");
         }
     }

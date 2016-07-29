@@ -2,6 +2,7 @@ package com.visa.vdp.visadirect;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.TimeZone;
 
 import org.apache.http.HttpStatus;
@@ -10,14 +11,17 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import com.visa.vdp.utils.AbstractClient;
+import com.visa.vdp.utils.AbstractVisaAPIClient;
+import com.visa.vdp.utils.MethodTypes;
 
-public class TestMVisa extends AbstractClient {
+public class TestMVisa {
     
     String cashInPushPayments;
+    AbstractVisaAPIClient abstractVisaAPIClient;
     
     @BeforeTest(groups = "visadirect")
     public void setup() {
+    	this.abstractVisaAPIClient = new AbstractVisaAPIClient();
         SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         TimeZone utc = TimeZone.getTimeZone("UTC");
         sdfDate.setTimeZone(utc);
@@ -55,7 +59,7 @@ public class TestMVisa extends AbstractClient {
         String baseUri = "visadirect/";
         String resourcePath = "mvisa/v1/cashinpushpayments";
         
-        CloseableHttpResponse response = doMutualAuthPostRequest(baseUri + resourcePath, "M Visa Transaction Test", this.cashInPushPayments);
+        CloseableHttpResponse response = this.abstractVisaAPIClient.doMutualAuthRequest(baseUri + resourcePath, "M Visa Transaction Test", this.cashInPushPayments, MethodTypes.POST, new HashMap<String, String>());
         Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK);
         response.close();
     }

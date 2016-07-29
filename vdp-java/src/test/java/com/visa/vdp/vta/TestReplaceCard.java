@@ -1,12 +1,5 @@
 package com.visa.vdp.vta;
 
-import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SignatureException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.http.HttpStatus;
@@ -14,16 +7,19 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.visa.vdp.utils.AbstractClient;
+import com.visa.vdp.utils.AbstractVisaAPIClient;
+import com.visa.vdp.utils.MethodTypes;
 import com.visa.vdp.utils.Property;
 import com.visa.vdp.utils.VisaProperties;
 
-public class TestReplaceCard extends AbstractClient {
+public class TestReplaceCard {
 
-    private String replaceCardsRequest;
+     String replaceCardsRequest;
+     AbstractVisaAPIClient abstractVisaAPIClient;
     
      @Test(groups = "vta")
      public void setUp() {
+    	 this.abstractVisaAPIClient = new AbstractVisaAPIClient();
          this.replaceCardsRequest = "{"
                          + "\"communityCode\": \""+ VisaProperties.getProperty(Property.VTA_COMMUNITY_CODE) + "\","
                                          + "\"newCard\": {"
@@ -72,13 +68,13 @@ public class TestReplaceCard extends AbstractClient {
      }
      
      @Test(groups = "vta")
-     public void testReplaceCards() throws SignatureException, IOException, KeyManagementException, UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException, CertificateException {
+     public void testReplaceCards() throws Exception {
          String baseUri = "vta/";
          String resourcePath = "v3/communities/"+VisaProperties.getProperty(Property.VTA_COMMUNITY_CODE) +"/cards";
 
          Map<String,String> headers = new HashMap<String,String>();
          headers.put("ServiceId", VisaProperties.getProperty(Property.VTA_SERVICE_ID));
-         CloseableHttpResponse response = doMutualAuthPostRequest(baseUri + resourcePath, "Replace a card test", this.replaceCardsRequest, headers);
+         CloseableHttpResponse response = this.abstractVisaAPIClient.doMutualAuthRequest(baseUri + resourcePath, "Replace a card test", this.replaceCardsRequest, MethodTypes.POST, headers);
          Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED);
          response.close();
      }

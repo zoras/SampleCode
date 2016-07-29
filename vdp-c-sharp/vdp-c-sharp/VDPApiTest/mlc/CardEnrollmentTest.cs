@@ -4,12 +4,14 @@ using System.Configuration;
 namespace Vdp
 {
     [TestClass]
-    public class CardholderEnrollmentTest : AbstractClient
+    public class CardholderEnrollmentTest
     {
         private string enrollementData;
+        private AbstractVisaAPIClient abstractVisaAPIClient;
 
         public CardholderEnrollmentTest()
         {
+            abstractVisaAPIClient = new AbstractVisaAPIClient();
             enrollementData =
             "{"
              + "\"enrollmentMessageType\": \"enroll\","
@@ -28,7 +30,7 @@ namespace Vdp
         {
             string baseUri = "mlc/";
             string resourcePath = "enrollment/v1/enrollments";
-            string status = DoMutualAuthCall(baseUri + resourcePath, "POST", "MLC Card Enrollement Test", enrollementData);
+            string status = abstractVisaAPIClient.DoMutualAuthCall(baseUri + resourcePath, "POST", "MLC Card Enrollement Test", enrollementData);
             Assert.AreEqual(status, "OK");
         }
     }

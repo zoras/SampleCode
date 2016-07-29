@@ -4,12 +4,14 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Vdp
 {
     [TestClass]
-    public class ConsumerRulesTest : AbstractClient
+    public class ConsumerRulesTest
     {
         private string cardRegisterData;
+        private AbstractVisaAPIClient abstractVisaAPIClient;
 
         public ConsumerRulesTest()
         {
+            abstractVisaAPIClient = new AbstractVisaAPIClient();
             cardRegisterData =
                   "{"
                      + "\"primaryAccountNumber\": \"" + ConfigurationManager.AppSettings["vctcTestPan"] + "\""
@@ -21,7 +23,7 @@ namespace Vdp
         {
             string baseUri = "vctc/";
             string resourcePath = "customerrules/v1/consumertransactioncontrols";
-            string status = DoMutualAuthCall(baseUri + resourcePath, "POST", "Card Registration Test", cardRegisterData);
+            string status = abstractVisaAPIClient.DoMutualAuthCall(baseUri + resourcePath, "POST", "Card Registration Test", cardRegisterData);
             Assert.IsTrue((status.Equals("OK")||status.Equals("Created")));
         }
     }

@@ -5,17 +5,22 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import java.util.HashMap;
+
 import org.apache.http.HttpStatus;
-import com.visa.vdp.utils.AbstractClient;
+import com.visa.vdp.utils.AbstractVisaAPIClient;
+import com.visa.vdp.utils.MethodTypes;
 import com.visa.vdp.utils.Property;
 import com.visa.vdp.utils.VisaProperties;
 
-public class TestCardholderEnrollment extends AbstractClient{
+public class TestCardholderEnrollment {
 
 	String enrollementData;
+	AbstractVisaAPIClient abstractVisaAPIClient;
 
 	@BeforeTest(groups = "mlc")
 	public void setup() {
+		this.abstractVisaAPIClient = new AbstractVisaAPIClient();
 		this.enrollementData = 
 			"{"
              +      "\"enrollmentMessageType\": \"enroll\","
@@ -34,7 +39,7 @@ public class TestCardholderEnrollment extends AbstractClient{
 	    String baseUri = "mlc/";
 	    String resourcePath = "enrollment/v1/enrollments";
 	    
-	    CloseableHttpResponse response = doMutualAuthPostRequest(baseUri + resourcePath, "Card Enrollment Test", this.enrollementData);
+	    CloseableHttpResponse response = this.abstractVisaAPIClient.doMutualAuthRequest(baseUri + resourcePath, "Card Enrollment Test", this.enrollementData, MethodTypes.POST, new HashMap<String, String>());
 	    Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK);
 	    response.close();
 	}

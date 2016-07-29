@@ -2,6 +2,7 @@ package com.visa.vdp.visadirect;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -9,14 +10,17 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import com.visa.vdp.utils.AbstractClient;
+import com.visa.vdp.utils.AbstractVisaAPIClient;
+import com.visa.vdp.utils.MethodTypes;
 
-public class TestFundsTransfer extends AbstractClient {
+public class TestFundsTransfer {
 
 	String pushFundsRequest;
+	AbstractVisaAPIClient abstractVisaAPIClient;
 	
 	@BeforeTest(groups = "visadirect")
 	public void setup() {
+		this.abstractVisaAPIClient = new AbstractVisaAPIClient();
 		SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");//dd/MM/yyyy
 	    Date now = new Date();
 	    String strDate = sdfDate.format(now);
@@ -60,7 +64,7 @@ public class TestFundsTransfer extends AbstractClient {
 	    String baseUri = "visadirect/";
 	    String resourcePath = "fundstransfer/v1/pushfundstransactions/";
 	    
-	    CloseableHttpResponse response = doMutualAuthPostRequest(baseUri + resourcePath, "Push Funds Transaction Test", this.pushFundsRequest);
+	    CloseableHttpResponse response = this.abstractVisaAPIClient.doMutualAuthRequest(baseUri + resourcePath, "Push Funds Transaction Test", this.pushFundsRequest, MethodTypes.POST, new HashMap<String, String>());
 	    Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK);
 	    response.close();
 	}

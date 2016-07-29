@@ -2,9 +2,10 @@
 
 namespace Vdp;
 
-class FundsTransferAttributeTest extends HttpClient {
+class FundsTransferAttributeTest extends \PHPUnit_Framework_TestCase {
 	
 	public function setUp() {
+		$this->abstractVisaAPIClient = new AbstractVisaAPIClient;
 		$this->fundsTransferInquiry = json_encode ( [
 		  "acquirerCountryCode" => "840",
 		  "acquiringBin" => "408999",
@@ -16,7 +17,7 @@ class FundsTransferAttributeTest extends HttpClient {
 	public function testFundsTransferEnquiry() {
 		$baseUrl = "paai/";
 		$resourcePath = "fundstransferattinq/v1/cardattributes/fundstransferinquiry";
-		$statusCode = $this->doMutualAuthCall ( 'post', $baseUrl.$resourcePath, 'Funds Transfer Inquiry call', $this->fundsTransferInquiry );
+		$statusCode = $this->abstractVisaAPIClient->doMutualAuthCall ( 'post', $baseUrl.$resourcePath, 'Funds Transfer Inquiry call', $this->fundsTransferInquiry );
 		$this->assertEquals($statusCode, "200");
 	}
 }

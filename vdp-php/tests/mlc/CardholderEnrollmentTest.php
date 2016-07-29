@@ -2,9 +2,11 @@
 
 namespace Vdp;
 
-class CardholderEnrollmentTest extends HttpClient {
+class CardholderEnrollmentTest extends \PHPUnit_Framework_TestCase {
 	
 	public function setUp() {
+		$this->conf = parse_ini_file ( "configuration.ini", true );
+		$this->abstractVisaAPIClient = new AbstractVisaAPIClient;
 		$this->enrollementData = json_encode ([
 		  "enrollmentMessageType" => "enroll",
 		  "enrollmentRequest" => [
@@ -20,7 +22,7 @@ class CardholderEnrollmentTest extends HttpClient {
 	public function testCardEnrollment() {
 		$baseUrl = "mlc/";
 		$resourcePath = "enrollment/v1/enrollments";
-		$statusCode = $this->doMutualAuthCall ( 'post', $baseUrl.$resourcePath, 'MLC Card Enrollement Test', $this->enrollementData );
+		$statusCode = $this->abstractVisaAPIClient->doMutualAuthCall ( 'post', $baseUrl.$resourcePath, 'MLC Card Enrollement Test', $this->enrollementData );
 		$this->assertEquals($statusCode, "200");
 	}
 }
