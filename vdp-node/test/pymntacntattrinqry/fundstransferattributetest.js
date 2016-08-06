@@ -1,7 +1,7 @@
 var request = require('request');
 var fs = require('fs');
 var config = require('../../config/configuration.json');
-var abstractVisaAPIClient = require('../../libs/abstractvisapiclient.js');
+var VisaAPIClient = require('../../libs/visaapiclient.js');
 var assert = require('chai').assert;
 var randomstring = require('randomstring');
 
@@ -12,6 +12,7 @@ var keyFile = config.key;
 var certificateFile = config.cert;
 
 describe('Payment Account Attributes Funds Transfer Test', function() {
+    var visaAPIClient = new VisaAPIClient();
     var fundsTransferInquiry = JSON.stringify({
           "acquirerCountryCode": "840",
           "acquiringBin": "408999",
@@ -24,7 +25,7 @@ describe('Payment Account Attributes Funds Transfer Test', function() {
         this.timeout(10000);
         var baseUri = 'paai/';
         var resourcePath = 'fundstransferattinq/v1/cardattributes/fundstransferinquiry';
-        abstractVisaAPIClient.doMutualAuthRequest(baseUri + resourcePath, fundsTransferInquiry, 'POST', {}, 
+        visaAPIClient.doMutualAuthRequest(baseUri + resourcePath, fundsTransferInquiry, 'POST', {}, 
         function(err, responseCode) {
             if(!err) {
                 assert.equal(responseCode, 200);

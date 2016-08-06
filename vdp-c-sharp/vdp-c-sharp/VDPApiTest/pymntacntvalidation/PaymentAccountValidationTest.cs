@@ -6,11 +6,11 @@ namespace Vdp
     public class PaymentAccountValidationTest
     {
         private string paymentAccountValidation;
-        private AbstractVisaAPIClient abstractVisaAPIClient;
+        private VisaAPIClient visaAPIClient;
 
         public PaymentAccountValidationTest()
         {
-            abstractVisaAPIClient = new AbstractVisaAPIClient();
+            visaAPIClient = new VisaAPIClient();
             paymentAccountValidation =
                      "{"
                           + "\"acquirerCountryCode\": \"840\","
@@ -44,7 +44,7 @@ namespace Vdp
         {
             string baseUri = "pav/";
             string resourcePath = "v1/cardvalidation";
-            string status = abstractVisaAPIClient.DoMutualAuthCall(baseUri + resourcePath, "POST", "Card Validation Test", paymentAccountValidation);
+            string status = visaAPIClient.DoMutualAuthCall(baseUri + resourcePath, "POST", "Card Validation Test", paymentAccountValidation);
             Assert.AreEqual(status, "OK");
         }
     }

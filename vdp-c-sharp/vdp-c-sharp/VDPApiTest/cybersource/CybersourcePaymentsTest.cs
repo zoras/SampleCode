@@ -8,11 +8,11 @@ namespace Vdp
     public class CybersourcePaymentsTest
     {
         private string paymentAuthorizationRequest;
-        private AbstractVisaAPIClient abstractVisaAPIClient;
+        private VisaAPIClient visaAPIClient;
 
         public CybersourcePaymentsTest()
         {
-            abstractVisaAPIClient = new AbstractVisaAPIClient();
+            visaAPIClient = new VisaAPIClient();
             paymentAuthorizationRequest =
            "{\"amount\": \"0\","
                + "\"currency\": \"USD\","
@@ -30,7 +30,7 @@ namespace Vdp
             string baseUri = "cybersource/";
             string resourcePath = "payments/v1/authorizations";
             string queryString = "apikey=" + ConfigurationManager.AppSettings["apiKey"];
-            string status = abstractVisaAPIClient.DoXPayTokenCall(baseUri, resourcePath, queryString, "POST", "Cybersouce Payments Authorization Test", paymentAuthorizationRequest);
+            string status = visaAPIClient.DoXPayTokenCall(baseUri, resourcePath, queryString, "POST", "Cybersouce Payments Authorization Test", paymentAuthorizationRequest);
             Assert.AreEqual(status, "Created");
         }
     }

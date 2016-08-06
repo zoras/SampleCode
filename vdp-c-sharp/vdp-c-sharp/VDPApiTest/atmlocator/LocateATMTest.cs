@@ -8,12 +8,12 @@ namespace Vdp
     public class LocateATMTest
     {
         private string atmInquiryRequest;
-        private AbstractVisaAPIClient abstractVisaAPIClient;
+        private VisaAPIClient visaAPIClient;
 
         public LocateATMTest()
         {
             string strDate = DateTime.UtcNow.ToString("yyyy-MM-ddThh:mm:ssZ");
-            abstractVisaAPIClient = new AbstractVisaAPIClient();
+            visaAPIClient = new VisaAPIClient();
             atmInquiryRequest =
             "{"
               + "\"requestData\": {"
@@ -109,7 +109,7 @@ namespace Vdp
         {
             string baseUri = "globalatmlocator/";
             string resourcePath = "v1/localatms/atmsinquiry";
-            string status = abstractVisaAPIClient.DoMutualAuthCall(baseUri + resourcePath, "POST", "Locate ATM Test", atmInquiryRequest);
+            string status = visaAPIClient.DoMutualAuthCall(baseUri + resourcePath, "POST", "Locate ATM Test", atmInquiryRequest);
             Assert.AreEqual(status, "OK");
         }
     }

@@ -1,4 +1,4 @@
-from visa.helpers.abstract_visa_api_client import AbstractVisaAPIClient
+from visa.helpers.visa_api_client import VisaAPIClient
 import json
 import datetime
 import unittest
@@ -20,7 +20,7 @@ class TestManageCustomers(unittest.TestCase):
     
     def setUp(self):
         date = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%fZ")
-        self.abstract_visa_api_client = AbstractVisaAPIClient()
+        self.visa_api_client = VisaAPIClient()
         self.create_customer_request = json.loads('''{
     "customer": {
         "cards": [
@@ -140,6 +140,6 @@ class TestManageCustomers(unittest.TestCase):
     def test_get_customers(self):
         base_uri = 'vta/'
         resource_path = 'v3/communities/'+ self.config.get('VDP','vtaCommunityCode') +"/customers";
-        response = self.abstract_visa_api_client.do_mutual_auth_request(base_uri + resource_path, self.create_customer_request, 'Create Customers Test', 'post', {'ServiceId' : self.config.get('VDP','vtaServiceId')})
+        response = self.visa_api_client.do_mutual_auth_request(base_uri + resource_path, self.create_customer_request, 'Create Customers Test', 'post', {'ServiceId' : self.config.get('VDP','vtaServiceId')})
         self.assertEqual(str(response.status_code) ,"201" ,"Create Customers Test failed")
         pass

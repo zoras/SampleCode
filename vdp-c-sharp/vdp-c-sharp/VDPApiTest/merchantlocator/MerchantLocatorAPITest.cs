@@ -7,11 +7,11 @@ namespace Vdp
     public class MerchantLocatorAPITest
     {
         private string locatorRequest;
-        private AbstractVisaAPIClient abstractVisaAPIClient;
+        private VisaAPIClient visaAPIClient;
 
         public MerchantLocatorAPITest()
         {
-            abstractVisaAPIClient = new AbstractVisaAPIClient();
+            visaAPIClient = new VisaAPIClient();
             string strDate = DateTime.UtcNow.ToString("yyyy-MM-ddThh:mm:ss.SSS");
             locatorRequest =
             "{"
@@ -44,7 +44,7 @@ namespace Vdp
         {
             string baseUri = "merchantlocator/";
             string resourcePath = "v1/locator";
-            string status = abstractVisaAPIClient.DoMutualAuthCall(baseUri + resourcePath, "POST", "Merchant Locator API Test", locatorRequest);
+            string status = visaAPIClient.DoMutualAuthCall(baseUri + resourcePath, "POST", "Merchant Locator API Test", locatorRequest);
             Assert.AreEqual(status, "OK");
         }
     }

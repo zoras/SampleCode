@@ -2,11 +2,11 @@ require 'test/unit'
 require 'rest-client'
 require 'json'
 require 'yaml'
-require File.expand_path('../../../lib/abstract_visa_api_client', __FILE__)
+require File.expand_path('../../../lib/visa_api_client', __FILE__)
 
 class LocationUpdateTest < Test::Unit::TestCase
   def setup
-    @abstract_visa_api_client = AbstractVisaAPIClient.new
+    @visa_api_client = VisaAPIClient.new
     @strDate = Time.now.utc.strftime("%Y-%m-%dT%H:%M:%S.%LZ")
     @config = YAML.load_file('configuration.yml')
     @locationsRequestBody ='''{
@@ -32,7 +32,7 @@ class LocationUpdateTest < Test::Unit::TestCase
   def test_locationUpdate
     base_uri = 'mlc/'
     resource_path = 'locationupdate/v1/locations'
-    response_code = @abstract_visa_api_client.doMutualAuthRequest("#{base_uri}#{resource_path}", "Location Update test", "post", @locationsRequestBody)
+    response_code = @visa_api_client.doMutualAuthRequest("#{base_uri}#{resource_path}", "Location Update test", "post", @locationsRequestBody)
     assert_equal("200", response_code, "Location Update test failed")
   end
 end

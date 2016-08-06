@@ -7,7 +7,7 @@ class ReplaceCardTest extends \PHPUnit_Framework_TestCase {
 	public function setUp() {
 		$strDate = date('Y-m-d\TH:i:s.z\Z', time());
 		$this->conf = parse_ini_file ( "configuration.ini", true );
-		$this->abstractVisaAPIClient = new AbstractVisaAPIClient;
+		$this->visaAPIClient = new VisaAPIClient;
 		$this->replaceCardsRequest = json_encode ([
             "communityCode" => $this->conf['VDP'] ['vtaCommunityCode'],
             "newCard" => [
@@ -58,7 +58,7 @@ class ReplaceCardTest extends \PHPUnit_Framework_TestCase {
 	public function testReplaceCards() {
 		$baseUrl = "vta/";
 		$resourcePath = "v3/communities/".$this->conf['VDP'] ['vtaCommunityCode']."/cards";
-		$statusCode = $this->abstractVisaAPIClient->doMutualAuthCall( 'post', $baseUrl.$resourcePath, 'Replace a card test', $this->replaceCardsRequest, array("ServiceId: ".$this->conf['VDP'] ['vtaServiceId'] ));
+		$statusCode = $this->visaAPIClient->doMutualAuthCall( 'post', $baseUrl.$resourcePath, 'Replace a card test', $this->replaceCardsRequest, array("ServiceId: ".$this->conf['VDP'] ['vtaServiceId'] ));
 		$this->assertEquals($statusCode, "201");
 	}
 }

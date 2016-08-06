@@ -1,4 +1,4 @@
-from visa.helpers.abstract_visa_api_client import AbstractVisaAPIClient
+from visa.helpers.visa_api_client import VisaAPIClient
 import json
 import unittest
 '''
@@ -8,7 +8,7 @@ import unittest
 class TestWatchListScreening(unittest.TestCase):
 
     def setUp(self):
-        self.abstract_visa_api_client = AbstractVisaAPIClient()
+        self.visa_api_client = VisaAPIClient()
         self.watch_list_inquiry = json.loads(''' {
                   "acquirerCountryCode": "840",
                   "acquiringBin": "408999",
@@ -23,6 +23,6 @@ class TestWatchListScreening(unittest.TestCase):
     def test_watch_list_inquiry(self):
         base_uri = 'visadirect/'
         resource_path = 'watchlistscreening/v1/watchlistinquiry'
-        response = self.abstract_visa_api_client.do_mutual_auth_request(base_uri + resource_path, self.watch_list_inquiry, 'Watch List Inquiry Test','post')
+        response = self.visa_api_client.do_mutual_auth_request(base_uri + resource_path, self.watch_list_inquiry, 'Watch List Inquiry Test','post')
         self.assertEqual(str(response.status_code) ,"200" ,"Watch List Inquiry test failed")
         pass

@@ -1,4 +1,4 @@
-from visa.helpers.abstract_visa_api_client import AbstractVisaAPIClient
+from visa.helpers.visa_api_client import VisaAPIClient
 import json
 import sys
 import os
@@ -20,7 +20,7 @@ class TestLocationUpdate(unittest.TestCase):
     
     def setUp(self):
         date = datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.%fZ")
-        self.abstract_visa_api_client = AbstractVisaAPIClient()
+        self.visa_api_client = VisaAPIClient()
         self.location_update = json.loads('''{
                                     "accuracy": "5000",
                                     "cloudNotificationKey": "03e3ae03-a627-4241-bad6-58f811c18e46",
@@ -43,6 +43,6 @@ class TestLocationUpdate(unittest.TestCase):
     def test_location_update(self):
         base_uri = 'mlc/'
         resource_path = 'locationupdate/v1/locations' 
-        response = self.abstract_visa_api_client.do_mutual_auth_request(base_uri + resource_path, self.location_update, 'Location Update Test', 'post')
+        response = self.visa_api_client.do_mutual_auth_request(base_uri + resource_path, self.location_update, 'Location Update Test', 'post')
         self.assertEqual(str(response.status_code) ,"200" ,"Location update test failed")
         pass

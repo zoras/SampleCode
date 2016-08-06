@@ -6,11 +6,11 @@ namespace Vdp
     public class ForeignExchangeRatesTest
     {
         private string foreignExchangeRequest;
-        private AbstractVisaAPIClient abstractVisaAPIClient;
+        private VisaAPIClient visaAPIClient;
 
         public ForeignExchangeRatesTest()
         {
-            abstractVisaAPIClient = new AbstractVisaAPIClient();
+            visaAPIClient = new VisaAPIClient();
             foreignExchangeRequest =
                 "{"
                           + "\"acquirerCountryCode\": \"840\","
@@ -41,7 +41,7 @@ namespace Vdp
         {
             string baseUri = "forexrates/";
             string resourcePath = "v1/foreignexchangerates";
-            string status = abstractVisaAPIClient.DoMutualAuthCall(baseUri + resourcePath, "POST", "Foreign Exchange Rates Test", foreignExchangeRequest);
+            string status = visaAPIClient.DoMutualAuthCall(baseUri + resourcePath, "POST", "Foreign Exchange Rates Test", foreignExchangeRequest);
             Assert.AreEqual(status, "OK");
         }
     }

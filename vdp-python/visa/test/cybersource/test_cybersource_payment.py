@@ -1,4 +1,4 @@
-from visa.helpers.abstract_visa_api_client import AbstractVisaAPIClient
+from visa.helpers.visa_api_client import VisaAPIClient
 import json
 import sys
 import os
@@ -18,7 +18,7 @@ class TestCybersourcePayment(unittest.TestCase):
     config.read(config_path)
     
     def setUp(self):
-        self.abstract_visa_api_client = AbstractVisaAPIClient()
+        self.visa_api_client = VisaAPIClient()
         self.payment_authorization_request = json.loads('''{
         "amount": "0",
         "currency": "USD",
@@ -33,6 +33,6 @@ class TestCybersourcePayment(unittest.TestCase):
         base_uri = 'cybersource/'
         resource_path = 'payments/v1/authorizations'
         query_string = 'apikey=' + self.config.get('VDP','apiKey')
-        response = self.abstract_visa_api_client.do_x_pay_request(base_uri, resource_path , query_string, self.payment_authorization_request, 'Cybersource Payments Test', 'post')
+        response = self.visa_api_client.do_x_pay_request(base_uri, resource_path , query_string, self.payment_authorization_request, 'Cybersource Payments Test', 'post')
         self.assertEqual(str(response.status_code) ,"201" ,"Cybersource payments test failed")
         pass

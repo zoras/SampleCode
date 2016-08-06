@@ -2,13 +2,13 @@ require 'test/unit'
 require 'rest-client'
 require 'json'
 require 'yaml'
-require File.expand_path('../../../lib/abstract_visa_api_client', __FILE__)
+require File.expand_path('../../../lib/visa_api_client', __FILE__)
 
 class ManageCustomersTest < Test::Unit::TestCase
   
   def setup
     @config = YAML.load_file('configuration.yml')
-    @abstract_visa_api_client = AbstractVisaAPIClient.new
+    @visa_api_client = VisaAPIClient.new
     @date = Time.now.strftime("%Y-%m-%dT%H:%M:%S.%LZ")
     @createCustomersRequest = '''{
     "customer": {
@@ -131,7 +131,7 @@ class ManageCustomersTest < Test::Unit::TestCase
   def test_getCustomers
     base_uri = 'vta/'
     resource_path = "v3/communities/#{@config['vtaCommunityCode']}/customers"
-    response_code = @abstract_visa_api_client.doMutualAuthRequest("#{base_uri}#{resource_path}", "Create Customers Request", "post", @createCustomersRequest, {'ServiceId' => @config['vtaServiceId']})
+    response_code = @visa_api_client.doMutualAuthRequest("#{base_uri}#{resource_path}", "Create Customers Request", "post", @createCustomersRequest, {'ServiceId' => @config['vtaServiceId']})
     assert_equal("201", response_code, "Create Customers test failed")
   end
 end

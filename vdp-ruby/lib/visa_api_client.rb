@@ -2,7 +2,7 @@ require 'rest-client'
 require 'yaml'
 require File.expand_path('../x_pay_utils', __FILE__)
 
-class AbstractVisaAPIClient
+class VisaAPIClient
   
   def initialize
     @config = YAML.load_file('configuration.yml')

@@ -2,11 +2,11 @@ require 'test/unit'
 require 'rest-client'
 require 'json'
 require 'yaml'
-require File.expand_path('../../../lib/abstract_visa_api_client', __FILE__)
+require File.expand_path('../../../lib/visa_api_client', __FILE__)
 
 class ForeignExchangeTest < Test::Unit::TestCase
   def setup
-    @abstract_visa_api_client = AbstractVisaAPIClient.new
+    @visa_api_client = VisaAPIClient.new
     @foreignExchangeRequest ='''{
     "acquirerCountryCode": "840",
     "acquiringBin": "408999",
@@ -34,7 +34,7 @@ class ForeignExchangeTest < Test::Unit::TestCase
   def test_foreignExchange
     base_uri = 'forexrates/'
     resource_path = 'v1/foreignexchangerates'
-    response_code = @abstract_visa_api_client.doMutualAuthRequest("#{base_uri}#{resource_path}", "Foreign Exchange test", "post", @foreignExchangeRequest)
+    response_code = @visa_api_client.doMutualAuthRequest("#{base_uri}#{resource_path}", "Foreign Exchange test", "post", @foreignExchangeRequest)
     assert_equal("200", response_code, "Foreign Exchange test failed")
   end
 end

@@ -5,7 +5,7 @@ namespace Vdp;
 class MVisaTest extends \PHPUnit_Framework_TestCase {
 	
 	public function setUp() {
-		$this->abstractVisaAPIClient = new AbstractVisaAPIClient;
+		$this->visaAPIClient = new VisaAPIClient;
 		$strDate = date('Y-m-d\TH:i:s', time());
 		$this->mVisaTransactionRequest = json_encode ([
 		  "acquirerCountryCode" => "643",
@@ -36,7 +36,7 @@ class MVisaTest extends \PHPUnit_Framework_TestCase {
 	public function testMVisaTransactions() {
 		$baseUrl = "visadirect/";
 		$resourcePath = "mvisa/v1/cashinpushpayments";
-		$statusCode = $this->abstractVisaAPIClient->doMutualAuthCall ( 'post', $baseUrl.$resourcePath, 'M Visa Transaction Test', $this->mVisaTransactionRequest );
+		$statusCode = $this->visaAPIClient->doMutualAuthCall ( 'post', $baseUrl.$resourcePath, 'M Visa Transaction Test', $this->mVisaTransactionRequest );
 		$this->assertEquals($statusCode, "200");
 	}
 }

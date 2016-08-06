@@ -1,7 +1,7 @@
 var request = require('request');
 var fs = require('fs');
 var config = require('../../config/configuration.json');
-var abstractVisaAPIClient = require('../../libs/abstractvisapiclient.js');
+var VisaAPIClient = require('../../libs/visaapiclient.js');
 var assert = require('chai').assert;
 var randomstring = require('randomstring');
 
@@ -12,6 +12,7 @@ var keyFile = config.key;
 var certificateFile = config.cert;
 
 describe('Visa Direct Watch List Screening test', function() {
+	var visaAPIClient = new VisaAPIClient();
 	var watchListInquiry = JSON.stringify({
 		  "acquirerCountryCode": "840",
 		  "acquiringBin": "408999",
@@ -27,7 +28,7 @@ describe('Visa Direct Watch List Screening test', function() {
 		this.timeout(10000);
 		var baseUri = 'visadirect/';
 		var resourcePath = 'watchlistscreening/v1/watchlistinquiry';
-		abstractVisaAPIClient.doMutualAuthRequest(baseUri + resourcePath, watchListInquiry, 'POST', {}, 
+		visaAPIClient.doMutualAuthRequest(baseUri + resourcePath, watchListInquiry, 'POST', {}, 
 		function(err, responseCode) {
 			if(!err) {
 				assert.equal(responseCode, 200);

@@ -1,4 +1,4 @@
-from visa.helpers.abstract_visa_api_client import AbstractVisaAPIClient
+from visa.helpers.visa_api_client import VisaAPIClient
 import json
 import sys
 import os
@@ -18,7 +18,7 @@ class TestConsumerRules(unittest.TestCase):
     config.read(config_path)
     
     def setUp(self):
-        self.abstract_visa_api_client = AbstractVisaAPIClient()
+        self.visa_api_client = VisaAPIClient()
         self.card_register_data = json.loads('''{
           "primaryAccountNumber": ''' + self.config.get('VDP','vctcTestPan') +'''
         }''')
@@ -26,6 +26,6 @@ class TestConsumerRules(unittest.TestCase):
     def test_register_a_card(self):
         base_uri = 'vctc/'
         resource_path = 'customerrules/v1/consumertransactioncontrols'
-        response = self.abstract_visa_api_client.do_mutual_auth_request(base_uri + resource_path, self.card_register_data, 'Register a card call', 'post')
+        response = self.visa_api_client.do_mutual_auth_request(base_uri + resource_path, self.card_register_data, 'Register a card call', 'post')
         self.assertTrue((str(response.status_code) == "200" or str(response.status_code) == "201"),"Register a card test failed")
         pass

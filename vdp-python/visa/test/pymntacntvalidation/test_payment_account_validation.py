@@ -1,4 +1,4 @@
-from visa.helpers.abstract_visa_api_client import AbstractVisaAPIClient
+from visa.helpers.visa_api_client import VisaAPIClient
 import json
 import unittest
 '''
@@ -8,7 +8,7 @@ import unittest
 class TestPaymentAccountValidation(unittest.TestCase):
 
     def setUp(self):
-        self.abstract_visa_api_client = AbstractVisaAPIClient()
+        self.visa_api_client = VisaAPIClient()
         self.payment_account_validation = json.loads('''{
           "acquirerCountryCode": "840",
           "acquiringBin": "408999",
@@ -38,6 +38,6 @@ class TestPaymentAccountValidation(unittest.TestCase):
     def test_enrollement(self):
         base_uri = 'pav/'
         resource_path = 'v1/cardvalidation'
-        response = self.abstract_visa_api_client.do_mutual_auth_request(base_uri + resource_path, self.payment_account_validation, 'Card Validation call', 'post')
+        response = self.visa_api_client.do_mutual_auth_request(base_uri + resource_path, self.payment_account_validation, 'Card Validation call', 'post')
         self.assertEqual(str(response.status_code) ,"200" ,"Card validation test failed")
         pass

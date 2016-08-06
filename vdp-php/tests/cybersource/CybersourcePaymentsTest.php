@@ -5,7 +5,7 @@ namespace Vdp;
 class CybersourcePaymentsTest extends \PHPUnit_Framework_TestCase {
 	
 	public function setUp() {
-		$this->abstractVisaAPIClient = new AbstractVisaAPIClient;
+		$this->visaAPIClient = new VisaAPIClient;
 		$this->paymentAuthorizationRequest = json_encode ( [ 
 	    'amount' => '0',
 	    'currency' => 'USD',
@@ -19,8 +19,8 @@ class CybersourcePaymentsTest extends \PHPUnit_Framework_TestCase {
 	public function testPaymentAuthorizations() {
 		$baseUrl = "cybersource/";
 		$resourcePath = "payments/v1/authorizations";
-		$queryString = "apikey=".$this->abstractVisaAPIClient->conf ['VDP'] ['apiKey'];
-		$statusCode = $this->abstractVisaAPIClient->doXPayTokenCall ( 'post', $baseUrl, $resourcePath, $queryString, 'Cybersource Payments Test', $this->paymentAuthorizationRequest );
+		$queryString = "apikey=".$this->visaAPIClient->conf ['VDP'] ['apiKey'];
+		$statusCode = $this->visaAPIClient->doXPayTokenCall ( 'post', $baseUrl, $resourcePath, $queryString, 'Cybersource Payments Test', $this->paymentAuthorizationRequest );
 		$this->assertEquals($statusCode, "201");
 	}
 }

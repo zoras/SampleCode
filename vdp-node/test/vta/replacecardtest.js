@@ -1,7 +1,7 @@
 var request = require('request');
 var fs = require('fs');
 var config = require('../../config/configuration.json');
-var abstractVisaAPIClient = require('../../libs/abstractvisapiclient.js');
+var VisaAPIClient = require('../../libs/visaapiclient.js');
 var assert = require('chai').assert;
 var randomstring = require('randomstring');
 
@@ -12,6 +12,7 @@ var keyFile = config.key;
 var certificateFile = config.cert;
 
 describe('Replace Cards', function() {
+	var visaAPIClient = new VisaAPIClient();
 	var date = new Date().toISOString();
 	var replaceCardsRequest = JSON.stringify({
         "communityCode": config.vtaCommunityCode,
@@ -63,7 +64,7 @@ describe('Replace Cards', function() {
 		this.timeout(10000);
 		var baseUri = 'vta/';
 		var resourcePath = 'v3/communities/'+ config.vtaCommunityCode +'/cards';
-		abstractVisaAPIClient.doMutualAuthRequest(baseUri + resourcePath, replaceCardsRequest, 'POST', {'ServiceId' : config.vtaServiceId}, 
+		visaAPIClient.doMutualAuthRequest(baseUri + resourcePath, replaceCardsRequest, 'POST', {'ServiceId' : config.vtaServiceId}, 
 		function(err, responseCode) {
 			if(!err) {
 				assert.equal(responseCode, 200);

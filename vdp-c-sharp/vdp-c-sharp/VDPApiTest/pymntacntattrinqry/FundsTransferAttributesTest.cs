@@ -6,11 +6,11 @@ namespace Vdp
     public class FundsTransferAttributesTest
     {
         private string fundsTransferInquiry;
-        private AbstractVisaAPIClient abstractVisaAPIClient;
+        private VisaAPIClient visaAPIClient;
 
         public FundsTransferAttributesTest()
         {
-            abstractVisaAPIClient = new AbstractVisaAPIClient();
+            visaAPIClient = new VisaAPIClient();
             fundsTransferInquiry =
                    "{"
                       + "\"acquirerCountryCode\": \"840\","
@@ -26,7 +26,7 @@ namespace Vdp
         {
             string baseUri = "paai/";
             string resourcePath = "fundstransferattinq/v1/cardattributes/fundstransferinquiry";
-            string status = abstractVisaAPIClient.DoMutualAuthCall(baseUri + resourcePath, "POST", "Funds Transfer Attributes Inquiry Test", fundsTransferInquiry);
+            string status = visaAPIClient.DoMutualAuthCall(baseUri + resourcePath, "POST", "Funds Transfer Attributes Inquiry Test", fundsTransferInquiry);
             Assert.AreEqual(status, "OK");
         }
     }

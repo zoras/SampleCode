@@ -55,7 +55,7 @@
     <Compile Include="VDPApiTest\atmlocator\LocateATMTest.cs" />
     <Compile Include="VDPApiTest\cybersource\CybersourcePaymentsTest.cs" />
     <Compile Include="VDPApiTest\foreignexchange\ForeignExchangeRatesTest.cs" />
-    <Compile Include="VDPApiTest\helpers\AbstractVisaAPIClient.cs" />
+    <Compile Include="VDPApiTest\helpers\VisaAPIClient.cs" />
     <Compile Include="VDPApiTest\merchantlocator\MerchantLocatorAPITest.cs" />
     <Compile Include="VDPApiTest\merchantsearch\MerchantSearchAPITest.cs" />
     <Compile Include="VDPApiTest\mlc\CardEnrollmentTest.cs" />

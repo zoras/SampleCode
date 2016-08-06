@@ -8,11 +8,11 @@ namespace Vdp
     {
         private string apikey;
         private string updatePaymentInfoRequest;
-        private AbstractVisaAPIClient abstractVisaAPIClient;
+        private VisaAPIClient visaAPIClient;
 
         public UpdatePaymentInformationTest()
         {
-            abstractVisaAPIClient = new AbstractVisaAPIClient();
+            visaAPIClient = new VisaAPIClient();
             apikey = ConfigurationManager.AppSettings["apiKey"];
             updatePaymentInfoRequest = "{"
                          + "\"orderInfo\": {"
@@ -39,7 +39,7 @@ namespace Vdp
             string resourcePath = "payment/info/{callId}";
             resourcePath = resourcePath.Replace("{callId}", ConfigurationManager.AppSettings["checkoutCallId"]);
             string queryString = "apikey=" + apikey;
-            string status = abstractVisaAPIClient.DoXPayTokenCall(baseUri, resourcePath, queryString, "PUT", "Update Payment Information Test", updatePaymentInfoRequest);
+            string status = visaAPIClient.DoXPayTokenCall(baseUri, resourcePath, queryString, "PUT", "Update Payment Information Test", updatePaymentInfoRequest);
             Assert.AreEqual(status, "OK");
         }
     }

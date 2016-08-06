@@ -5,9 +5,9 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class VisaProperties {
-    
+
     static Properties properties;
-    
+
     static {
         try {
             properties = new Properties();
@@ -21,7 +21,7 @@ public class VisaProperties {
             throw new RuntimeException(e);
         }
     }
-    
+
     public static String getProperty(Property property) {
         return (String) properties.get(property.getValue());
     }

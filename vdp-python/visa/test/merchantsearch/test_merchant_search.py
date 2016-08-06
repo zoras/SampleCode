@@ -1,4 +1,4 @@
-from visa.helpers.abstract_visa_api_client import AbstractVisaAPIClient
+from visa.helpers.visa_api_client import VisaAPIClient
 import json
 import datetime
 import unittest
@@ -10,7 +10,7 @@ class TestMerchantSearchAPI(unittest.TestCase):
 
     def setUp(self):
         date = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3]
-        self.abstract_visa_api_client = AbstractVisaAPIClient()
+        self.visa_api_client = VisaAPIClient()
         self.locator_request = json.loads('''{
                          "header": {
                              "messageDateTime": "'''+ date  +'''",
@@ -49,6 +49,6 @@ class TestMerchantSearchAPI(unittest.TestCase):
     def test_merchant_search_API(self):
         base_uri = 'merchantsearch/'
         resource_path = 'v1/search'
-        response = self.abstract_visa_api_client.do_mutual_auth_request(base_uri + resource_path, self.locator_request, 'Merchant Search Test', 'post')
+        response = self.visa_api_client.do_mutual_auth_request(base_uri + resource_path, self.locator_request, 'Merchant Search Test', 'post')
         self.assertEqual(str(response.status_code) ,"200" ,"Merchant search test failed")
         pass

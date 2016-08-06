@@ -1,7 +1,7 @@
 var request = require('request');
 var fs = require('fs');
 var config = require('../../config/configuration.json');
-var abstractVisaAPIClient = require('../../libs/abstractvisapiclient.js');
+var VisaAPIClient = require('../../libs/visaapiclient.js');
 var assert = require('chai').assert;
 var randomstring = require('randomstring');
 
@@ -12,6 +12,7 @@ var keyFile = config.key;
 var certificateFile = config.cert;
 
 describe('Visa Travel Notification Service Test', function() {
+	var visaAPIClient = new VisaAPIClient();
 	var departureDate = new Date();
 	var returnDate = new Date();
 	returnDate.setDate(returnDate.getDate() + 7);
@@ -35,7 +36,7 @@ describe('Visa Travel Notification Service Test', function() {
 		this.timeout(10000);
 		var baseUri = 'travelnotificationservice/';
 		var resourcePath = 'v1/travelnotification/itinerary';
-		abstractVisaAPIClient.doMutualAuthRequest(baseUri + resourcePath, travelNotificationRequest, 'POST', {}, 
+		visaAPIClient.doMutualAuthRequest(baseUri + resourcePath, travelNotificationRequest, 'POST', {}, 
 		function(err, responseCode) {
 		    if(!err) {
 		    	assert.equal(responseCode, 200);

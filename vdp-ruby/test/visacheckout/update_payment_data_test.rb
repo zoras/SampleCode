@@ -2,13 +2,13 @@ require 'test/unit'
 require 'rest-client'
 require 'json'
 require 'yaml'
-require File.expand_path('../../../lib/abstract_visa_api_client', __FILE__)
+require File.expand_path('../../../lib/visa_api_client', __FILE__)
 
 class UpdatePaymentDataTest < Test::Unit::TestCase
   
   def setup
     @config = YAML.load_file('configuration.yml')
-    @abstract_visa_api_client = AbstractVisaAPIClient.new
+    @visa_api_client = VisaAPIClient.new
     @updatePaymentInfoRequest = '''{
       "orderInfo": {
       "currencyCode": "USD",
@@ -32,7 +32,7 @@ class UpdatePaymentDataTest < Test::Unit::TestCase
     resource_path = 'payment/info/{callId}'
     resource_path = resource_path.sub('{callId}',@config['checkoutCallId'])
     api_key = @config['apiKey']
-    response_code = @abstract_visa_api_client.doXPayTokenRequest(base_uri, resource_path, "apikey=#{api_key}", "Update Payment Data Test", "put", @updatePaymentInfoRequest)
+    response_code = @visa_api_client.doXPayTokenRequest(base_uri, resource_path, "apikey=#{api_key}", "Update Payment Data Test", "put", @updatePaymentInfoRequest)
     assert_equal("200", response_code, "Update Payment Information test failed")
     end
 end

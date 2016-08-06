@@ -1,4 +1,4 @@
-from visa.helpers.abstract_visa_api_client import AbstractVisaAPIClient
+from visa.helpers.visa_api_client import VisaAPIClient
 import json
 import sys
 import os
@@ -18,7 +18,7 @@ class TestUpdatePaymentInformation(unittest.TestCase):
     config.read(config_path)
     
     def setUp(self):
-        self.abstract_visa_api_client = AbstractVisaAPIClient()
+        self.visa_api_client = VisaAPIClient()
         self.update_payment_info_request = json.loads('''{
                           "orderInfo": {
                           "currencyCode": "USD",
@@ -41,6 +41,6 @@ class TestUpdatePaymentInformation(unittest.TestCase):
         resource_path = 'payment/info/{callId}'
         resource_path = resource_path.replace('{callId}', self.config.get('VDP','checkoutCallId'))
         query_string = 'apikey=' + self.config.get('VDP','apiKey')
-        response = self.abstract_visa_api_client.do_x_pay_request(base_uri, resource_path , query_string, self.update_payment_info_request, 'Update Payment Information Test', 'put')
+        response = self.visa_api_client.do_x_pay_request(base_uri, resource_path , query_string, self.update_payment_info_request, 'Update Payment Information Test', 'put')
         self.assertEqual(str(response.status_code) ,"200" ,"Update Payment Information test failed")
         pass

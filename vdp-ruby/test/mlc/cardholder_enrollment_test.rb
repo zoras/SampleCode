@@ -2,11 +2,11 @@ require 'test/unit'
 require 'rest-client'
 require 'json'
 require 'yaml'
-require File.expand_path('../../../lib/abstract_visa_api_client', __FILE__)
+require File.expand_path('../../../lib/visa_api_client', __FILE__)
 
 class CardholderEnrollmentTest < Test::Unit::TestCase
   def setup
-    @abstract_visa_api_client = AbstractVisaAPIClient.new
+    @visa_api_client = VisaAPIClient.new
     @config = YAML.load_file('configuration.yml')
     @enrollementData ='''{
     "enrollmentMessageType": "enroll",
@@ -23,7 +23,7 @@ class CardholderEnrollmentTest < Test::Unit::TestCase
   def test_cardEnrollment
     base_uri = 'mlc/'
     resource_path = 'enrollment/v1/enrollments'
-    response_code = @abstract_visa_api_client.doMutualAuthRequest("#{base_uri}#{resource_path}", "Cardholder Enrollment test", "post", @enrollementData)
+    response_code = @visa_api_client.doMutualAuthRequest("#{base_uri}#{resource_path}", "Cardholder Enrollment test", "post", @enrollementData)
     assert_equal("200", response_code, "Cardholder Enrollment test failed")
   end
 end

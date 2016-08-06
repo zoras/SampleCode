@@ -6,7 +6,7 @@ class CardholderEnrollmentTest extends \PHPUnit_Framework_TestCase {
 	
 	public function setUp() {
 		$this->conf = parse_ini_file ( "configuration.ini", true );
-		$this->abstractVisaAPIClient = new AbstractVisaAPIClient;
+		$this->visaAPIClient = new VisaAPIClient;
 		$this->enrollementData = json_encode ([
 		  "enrollmentMessageType" => "enroll",
 		  "enrollmentRequest" => [
@@ -22,7 +22,7 @@ class CardholderEnrollmentTest extends \PHPUnit_Framework_TestCase {
 	public function testCardEnrollment() {
 		$baseUrl = "mlc/";
 		$resourcePath = "enrollment/v1/enrollments";
-		$statusCode = $this->abstractVisaAPIClient->doMutualAuthCall ( 'post', $baseUrl.$resourcePath, 'MLC Card Enrollement Test', $this->enrollementData );
+		$statusCode = $this->visaAPIClient->doMutualAuthCall ( 'post', $baseUrl.$resourcePath, 'MLC Card Enrollement Test', $this->enrollementData );
 		$this->assertEquals($statusCode, "200");
 	}
 }

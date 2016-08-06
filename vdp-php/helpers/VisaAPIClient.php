@@ -2,7 +2,7 @@
 
 namespace Vdp;
 
-class AbstractVisaAPIClient {
+class VisaAPIClient {
 	
 	public function __construct() {
 		$this->conf = parse_ini_file ( "configuration.ini", true );

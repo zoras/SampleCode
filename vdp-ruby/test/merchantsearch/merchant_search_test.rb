@@ -2,11 +2,11 @@ require 'test/unit'
 require 'rest-client'
 require 'json'
 require 'yaml'
-require File.expand_path('../../../lib/abstract_visa_api_client', __FILE__)
+require File.expand_path('../../../lib/visa_api_client', __FILE__)
 
 class MerchantSearchTest < Test::Unit::TestCase
   def setup
-    @abstract_visa_api_client = AbstractVisaAPIClient.new
+    @visa_api_client = VisaAPIClient.new
     @strDate = Time.now.strftime("%Y-%m-%dT%H:%M:%S.%L")
     @searchRequest ='''{
     "header": {
@@ -47,7 +47,7 @@ class MerchantSearchTest < Test::Unit::TestCase
   def test_merchantSearch
     base_uri = 'merchantsearch/'
     resource_path = 'v1/search'
-    response_code = @abstract_visa_api_client.doMutualAuthRequest("#{base_uri}#{resource_path}", "Merchant Search Test", "post", @searchRequest)
+    response_code = @visa_api_client.doMutualAuthRequest("#{base_uri}#{resource_path}", "Merchant Search Test", "post", @searchRequest)
     assert_equal("200", response_code, "Merchant Search test failed")
   end
 end

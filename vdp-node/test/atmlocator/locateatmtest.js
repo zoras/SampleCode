@@ -1,6 +1,6 @@
 var request = require('request');
 var fs = require('fs');
-var abstractVisaAPIClient = require('../../libs/abstractvisapiclient.js');
+var VisaAPIClient = require('../../libs/visaapiclient.js');
 var config = require('../../config/configuration.json');
 var assert = require('chai').assert;
 var randomstring = require('randomstring');
@@ -12,6 +12,7 @@ var keyFile = config.key;
 var certificateFile = config.cert;
 
 describe('ATM Locator test', function() {
+	var visaAPIClient = new VisaAPIClient();
 	var strDate = new Date().toISOString();
 	var atmInquiryRequest = JSON.stringify({
 		"requestData": {
@@ -105,7 +106,7 @@ describe('ATM Locator test', function() {
 		this.timeout(10000);
 		var baseUri = 'globalatmlocator/';
 		var resourcePath = 'v1/localatms/atmsinquiry';
-		abstractVisaAPIClient.doMutualAuthRequest(baseUri + resourcePath, atmInquiryRequest, 'POST', {}, 
+		visaAPIClient.doMutualAuthRequest(baseUri + resourcePath, atmInquiryRequest, 'POST', {}, 
 		function(err, responseCode) {
             if(!err) {
                 assert.equal(responseCode, 200);

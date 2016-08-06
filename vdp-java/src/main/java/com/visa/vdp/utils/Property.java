@@ -1,7 +1,7 @@
 package com.visa.vdp.utils;
 
 public enum Property {
-    
+
     SHARED_SECRET("sharedSecret"),
     KEYSTORE_PATH("keyStorePath"),
     API_KEY("apiKey"),
@@ -60,14 +60,14 @@ public enum Property {
     VTA_NEW_CARD_ADDRESS("vtaReplaceCardNewAddress"), 
     VTA_CREATE_CARD_ADDRESS("vtaCreateCustomerAddress"), 
     TNS_CARD_ACCOUNT_NUMBERS("tnsCardNumbers");
-    
-    
+
+
     String value;
-    
+
     private Property(String value) {
         this.value = value;
     }
-    
+
     public String getValue() {
         return value;
     }

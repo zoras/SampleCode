@@ -18,14 +18,14 @@ import calendar
 @author: visa
 '''
 
-class AbstractVisaAPIClient:
+class VisaAPIClient:
     
     config = parser.ConfigParser()
     config_path = os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(__file__)),'configuration.ini'))
     config.read(config_path)
     
     logging.getLogger('').addHandler(logging.StreamHandler())
-    log = logging.getLogger('AbstractVisaAPIClient')
+    log = logging.getLogger('VisaAPIClient')
 
     def _get_x_pay_session(self, shared_secret, resource_path, query_string, body):
         return XSession(shared_secret, resource_path, query_string, body)

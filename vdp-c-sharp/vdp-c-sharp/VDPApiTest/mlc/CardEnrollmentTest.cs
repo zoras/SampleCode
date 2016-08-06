@@ -7,11 +7,11 @@ namespace Vdp
     public class CardholderEnrollmentTest
     {
         private string enrollementData;
-        private AbstractVisaAPIClient abstractVisaAPIClient;
+        private VisaAPIClient visaAPIClient;
 
         public CardholderEnrollmentTest()
         {
-            abstractVisaAPIClient = new AbstractVisaAPIClient();
+            visaAPIClient = new VisaAPIClient();
             enrollementData =
             "{"
              + "\"enrollmentMessageType\": \"enroll\","
@@ -30,7 +30,7 @@ namespace Vdp
         {
             string baseUri = "mlc/";
             string resourcePath = "enrollment/v1/enrollments";
-            string status = abstractVisaAPIClient.DoMutualAuthCall(baseUri + resourcePath, "POST", "MLC Card Enrollement Test", enrollementData);
+            string status = visaAPIClient.DoMutualAuthCall(baseUri + resourcePath, "POST", "MLC Card Enrollement Test", enrollementData);
             Assert.AreEqual(status, "OK");
         }
     }

@@ -6,7 +6,7 @@ class LocateAtmApiTest extends \PHPUnit_Framework_TestCase {
 	
 	public function setUp() {
 		$strDate = date('Y-m-d\TH:i:s.z\Z', time());
-		$this->abstractVisaAPIClient = new AbstractVisaAPIClient;
+		$this->visaAPIClient = new VisaAPIClient;
 		$this->atmInquiryRequest = json_encode ([
 		  "requestData" => [
 			    "culture" => "en-US",
@@ -99,7 +99,7 @@ class LocateAtmApiTest extends \PHPUnit_Framework_TestCase {
 	public function testAtmInquiry() {
 		$baseUrl = "globalatmlocator/";
 		$resourcePath = "v1/localatms/atmsinquiry";
-		$statusCode = $this->abstractVisaAPIClient->doMutualAuthCall ( 'post', $baseUrl.$resourcePath, 'ATM Locator test', $this->atmInquiryRequest );
+		$statusCode = $this->visaAPIClient->doMutualAuthCall ( 'post', $baseUrl.$resourcePath, 'ATM Locator test', $this->atmInquiryRequest );
 		$this->assertEquals($statusCode, "200");
 	}
 }

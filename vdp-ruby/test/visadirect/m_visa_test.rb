@@ -2,11 +2,11 @@ require 'test/unit'
 require 'rest-client'
 require 'json'
 require 'yaml'
-require File.expand_path('../../../lib/abstract_visa_api_client', __FILE__)
+require File.expand_path('../../../lib/visa_api_client', __FILE__)
 
 class MVisaTest < Test::Unit::TestCase
   def setup
-    @abstract_visa_api_client = AbstractVisaAPIClient.new
+    @visa_api_client = VisaAPIClient.new
     @strDate = Time.now.utc.strftime("%Y-%m-%dT%H:%M:%S")
     @mVisaTransactionRequest ='''{
     "acquirerCountryCode": "643",
@@ -37,7 +37,7 @@ class MVisaTest < Test::Unit::TestCase
   def test_mVisaTransacation
     base_uri = 'visadirect/'
     resource_path = 'mvisa/v1/cashinpushpayments'
-    response_code = @abstract_visa_api_client.doMutualAuthRequest("#{base_uri}#{resource_path}", "M-Visa Transacation test", "post", @mVisaTransactionRequest)
+    response_code = @visa_api_client.doMutualAuthRequest("#{base_uri}#{resource_path}", "M-Visa Transacation test", "post", @mVisaTransactionRequest)
     assert_equal("200", response_code, "M-Visa Transacation test failed")
   end
 end

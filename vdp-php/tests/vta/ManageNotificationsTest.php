@@ -6,7 +6,7 @@ class ManageNotificationsTest extends \PHPUnit_Framework_TestCase {
 	
 	public function setUp() {
 		$this->conf = parse_ini_file ( "configuration.ini", true );
-		$this->abstractVisaAPIClient = new AbstractVisaAPIClient;
+		$this->visaAPIClient = new VisaAPIClient;
 		$this->notificationSubscriptionRequest = json_encode ([
                          "contactType"=> $this->conf['VDP'] ['vtaNotificationContactType'],
                          "contactValue"=> "john@visa.com",
@@ -24,7 +24,7 @@ class ManageNotificationsTest extends \PHPUnit_Framework_TestCase {
 	public function testNotificationSubscription() {
 		$baseUrl = "vta/";
 		$resourcePath = "v3/communities/".$this->conf['VDP'] ['vtaCommunityCode']."/portfolios/".$this->conf['VDP'] ['vtaPortfolioNumber']."/customers/".$this->conf['VDP'] ['vtaCustomerId']."/notifications";
-		$statusCode = $this->abstractVisaAPIClient->doMutualAuthCall( 'post', $baseUrl.$resourcePath, 'Notification Subscriptions Test', $this->notificationSubscriptionRequest, array("ServiceId: ".$this->conf['VDP'] ['vtaServiceId'] ));
+		$statusCode = $this->visaAPIClient->doMutualAuthCall( 'post', $baseUrl.$resourcePath, 'Notification Subscriptions Test', $this->notificationSubscriptionRequest, array("ServiceId: ".$this->conf['VDP'] ['vtaServiceId'] ));
 		$this->assertEquals($statusCode, "201");
 	}
 }

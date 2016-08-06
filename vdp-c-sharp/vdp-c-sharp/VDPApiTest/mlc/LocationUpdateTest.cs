@@ -8,11 +8,11 @@ namespace Vdp
     public class LocationUpdateTest
     {
         private string locationsRequestBody;
-        private AbstractVisaAPIClient abstractVisaAPIClient;
+        private VisaAPIClient visaAPIClient;
 
         public LocationUpdateTest()
         {
-            abstractVisaAPIClient = new AbstractVisaAPIClient();
+            visaAPIClient = new VisaAPIClient();
             string strDate = DateTime.UtcNow.ToString("yyyy-MM-ddThh:mm:ssZ");
             locationsRequestBody =
                "{"
@@ -40,7 +40,7 @@ namespace Vdp
         {
             string baseUri = "mlc/";
             string resourcePath = "locationupdate/v1/locations";
-            string status = abstractVisaAPIClient.DoMutualAuthCall(baseUri + resourcePath, "POST", "Location Updates Test", locationsRequestBody);
+            string status = visaAPIClient.DoMutualAuthCall(baseUri + resourcePath, "POST", "Location Updates Test", locationsRequestBody);
             Assert.AreEqual(status, "OK");
         }
     }

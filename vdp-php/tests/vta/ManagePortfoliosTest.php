@@ -6,13 +6,13 @@ class ManagePortfoliosTest extends \PHPUnit_Framework_TestCase {
 	
 	public function setUp() {
 		$this->conf = parse_ini_file ( "configuration.ini", true );
-		$this->abstractVisaAPIClient = new AbstractVisaAPIClient;
+		$this->visaAPIClient = new VisaAPIClient;
 	}
 	
 	public function testPortfolios() {
 		$baseUrl = "vta/";
 		$resourcePath = "v3/communities/".$this->conf['VDP'] ['vtaCommunityCode']."/portfolios";
-		$statusCode = $this->abstractVisaAPIClient->doMutualAuthCall( 'get', $baseUrl.$resourcePath, 'Get Portfolio Details Test', '', array("ServiceId: ".$this->conf['VDP'] ['vtaServiceId'] ));
+		$statusCode = $this->visaAPIClient->doMutualAuthCall( 'get', $baseUrl.$resourcePath, 'Get Portfolio Details Test', '', array("ServiceId: ".$this->conf['VDP'] ['vtaServiceId'] ));
 		$this->assertEquals($statusCode, "200");
 	}
 }

@@ -2,14 +2,14 @@ require 'test/unit'
 require 'rest-client'
 require 'json'
 require 'yaml'
-require File.expand_path('../../../lib/abstract_visa_api_client', __FILE__)
+require File.expand_path('../../../lib/visa_api_client', __FILE__)
 
 class ReplaceCardsTest < Test::Unit::TestCase
   
   def setup
     @date = Time.now.strftime("%Y-%m-%dT%H:%M:%S.%LZ")
     @config = YAML.load_file('configuration.yml')
-    @abstract_visa_api_client = AbstractVisaAPIClient.new
+    @visa_api_client = VisaAPIClient.new
     @replaceCardsRequest = '''{
     "communityCode": "''' + @config['vtaCommunityCode'] + '''",
     "newCard": {
@@ -60,7 +60,7 @@ class ReplaceCardsTest < Test::Unit::TestCase
   def test_replaceACard
     base_uri = 'vta/'
     resource_path = "v3/communities/#{@config['vtaCommunityCode']}/cards"
-    response_code = @abstract_visa_api_client.doMutualAuthRequest("#{base_uri}#{resource_path}", "Replace a card test", "post", @replaceCardsRequest, {'ServiceId' => @config['vtaServiceId']})
+    response_code = @visa_api_client.doMutualAuthRequest("#{base_uri}#{resource_path}", "Replace a card test", "post", @replaceCardsRequest, {'ServiceId' => @config['vtaServiceId']})
     assert_equal("201", response_code, "Replace a card test failed")
   end
 end

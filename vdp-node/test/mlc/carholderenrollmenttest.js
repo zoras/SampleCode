@@ -1,7 +1,7 @@
 var request = require('request');
 var fs = require('fs');
 var config = require('../../config/configuration.json');
-var abstractVisaAPIClient = require('../../libs/abstractvisapiclient.js');
+var VisaAPIClient = require('../../libs/visaapiclient.js');
 var assert = require('chai').assert;
 var randomstring = require('randomstring');
 
@@ -12,6 +12,7 @@ var keyFile = config.key;
 var certificateFile = config.cert;
 
 describe('MLC Enrollment test', function() {
+	var visaAPIClient = new VisaAPIClient();
 	var enrollementData = JSON.stringify({
 		  "enrollmentMessageType": "enroll",
 		  "enrollmentRequest": {
@@ -27,7 +28,7 @@ describe('MLC Enrollment test', function() {
 		this.timeout(10000);
 		var baseUri = 'mlc/';
 		var resourcePath = 'enrollment/v1/enrollments';
-		abstractVisaAPIClient.doMutualAuthRequest(baseUri + resourcePath, enrollementData, 'POST', {}, 
+		visaAPIClient.doMutualAuthRequest(baseUri + resourcePath, enrollementData, 'POST', {}, 
         function(err, responseCode) {
             if(!err) {
                 assert.equal(responseCode, 200);

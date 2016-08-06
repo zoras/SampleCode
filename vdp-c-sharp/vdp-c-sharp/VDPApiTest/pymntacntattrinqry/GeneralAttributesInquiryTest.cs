@@ -6,11 +6,11 @@ namespace Vdp
     public class GeneralAttributesInquiryTest
     {
         private string generalAttributeInquiry;
-        private AbstractVisaAPIClient abstractVisaAPIClient;
+        private VisaAPIClient visaAPIClient;
 
         public GeneralAttributesInquiryTest()
         {
-            abstractVisaAPIClient = new AbstractVisaAPIClient();
+            visaAPIClient = new VisaAPIClient();
             generalAttributeInquiry =
                     "{"
                       + "\"primaryAccountNumber\": \"4856200001123821\""
@@ -22,7 +22,7 @@ namespace Vdp
         {
             string baseUri = "paai/";
             string resourcePath = "generalattinq/v1/cardattributes/generalinquiry";
-            string status = abstractVisaAPIClient.DoMutualAuthCall(baseUri + resourcePath, "POST", "General Attributes Inquiry Test", generalAttributeInquiry);
+            string status = visaAPIClient.DoMutualAuthCall(baseUri + resourcePath, "POST", "General Attributes Inquiry Test", generalAttributeInquiry);
             Assert.AreEqual(status, "OK");
         }
     }

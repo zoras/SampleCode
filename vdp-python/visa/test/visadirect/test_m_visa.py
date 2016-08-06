@@ -1,4 +1,4 @@
-from visa.helpers.abstract_visa_api_client import AbstractVisaAPIClient
+from visa.helpers.visa_api_client import VisaAPIClient
 import json
 import datetime
 import unittest
@@ -10,7 +10,7 @@ class TestMVisa(unittest.TestCase):
 
     def setUp(self):
         date = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
-        self.abstract_visa_api_client = AbstractVisaAPIClient()
+        self.visa_api_client = VisaAPIClient()
         self.m_visa_transaction_request = json.loads('''{
             "acquirerCountryCode": "643",
             "acquiringBin": "400171",
@@ -39,6 +39,6 @@ class TestMVisa(unittest.TestCase):
     def test_mVisa_transactions(self):
         base_uri = 'visadirect/'
         resource_path = 'mvisa/v1/cashinpushpayments'
-        response = self.abstract_visa_api_client.do_mutual_auth_request(base_uri + resource_path, self.m_visa_transaction_request, 'M Visa Transaction Test','post')
+        response = self.visa_api_client.do_mutual_auth_request(base_uri + resource_path, self.m_visa_transaction_request, 'M Visa Transaction Test','post')
         self.assertEqual(str(response.status_code) ,"200" ,"M Visa Transaction test failed")
         pass

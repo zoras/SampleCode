@@ -1,7 +1,7 @@
 var request = require('request');
 var fs = require('fs');
 var config = require('../../config/configuration.json');
-var abstractVisaAPIClient = require('../../libs/abstractvisapiclient.js');
+var VisaAPIClient = require('../../libs/visaapiclient.js');
 var assert = require('chai').assert;
 var randomstring = require('randomstring');
 
@@ -12,7 +12,7 @@ var keyFile = config.key;
 var certificateFile = config.cert;
 
 describe('Manage Notifications', function() {
-	
+	var visaAPIClient = new VisaAPIClient();
 	var notificationSubscriptionRequest = JSON.stringify({
         "contactType": config.vtaNotificationContactType,
         "contactValue": "john@visa.com",
@@ -30,7 +30,7 @@ describe('Manage Notifications', function() {
 		this.timeout(10000);
 		var baseUri = 'vta/';
 		var resourcePath = 'v3/communities/'+ config.vtaCommunityCode +'/portfolios/' + config.vtaPortfolioNumber +'/customers/' + config.vtaCustomerId+ '/notifications';
-		abstractVisaAPIClient.doMutualAuthRequest(baseUri + resourcePath, notificationSubscriptionRequest, 'POST', {'ServiceId' : config.vtaServiceId}, 
+		visaAPIClient.doMutualAuthRequest(baseUri + resourcePath, notificationSubscriptionRequest, 'POST', {'ServiceId' : config.vtaServiceId}, 
 		function(err, responseCode) {
 			if(!err) {
 				assert.equal(responseCode, 201);

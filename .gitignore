@@ -6,8 +6,8 @@
 /vdp-node/.project
 /vdp-node/.settings/
 /vdp-node/.sublime-project
-vdp-python/.project
-vdp-python/.pydevproject
+/vdp-python/.project
+/vdp-python/.pydevproject
 /vdp-python/.eggs
 /vdp-python/build
 /vdp-python/dist

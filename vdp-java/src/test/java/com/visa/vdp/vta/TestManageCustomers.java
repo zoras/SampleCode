@@ -11,25 +11,25 @@ import org.testng.Assert;
 import org.apache.http.HttpStatus;
 import org.testng.annotations.Test;
 
-import com.visa.vdp.utils.AbstractVisaAPIClient;
+import com.visa.vdp.utils.VisaAPIClient;
 import com.visa.vdp.utils.MethodTypes;
 import com.visa.vdp.utils.Property;
 import com.visa.vdp.utils.VisaProperties;
 
 public class TestManageCustomers {
 
-     String createCustomerRequest;
-     AbstractVisaAPIClient abstractVisaAPIClient;
-     
-     @Test(groups = "vta")
-     public void setUp() {
-    	 this.abstractVisaAPIClient = new AbstractVisaAPIClient();
-         SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-         TimeZone utc = TimeZone.getTimeZone("UTC");
-         sdfDate.setTimeZone(utc);
-         Date now = new Date();
-         String strDate = sdfDate.format(now);
-         this.createCustomerRequest = "{"
+    String createCustomerRequest;
+    VisaAPIClient visaAPIClient;
+
+    @Test(groups = "vta")
+    public void setUp() {
+        this.visaAPIClient = new VisaAPIClient();
+        SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        TimeZone utc = TimeZone.getTimeZone("UTC");
+        sdfDate.setTimeZone(utc);
+        Date now = new Date();
+        String strDate = sdfDate.format(now);
+        this.createCustomerRequest = "{"
                          + "\"customer\": {"
                                          + "\"cards\": ["
                                              + "{"
@@ -145,7 +145,7 @@ public class TestManageCustomers {
                                      + "}"
                                  + "}";
      }
-     
+
      @Test(groups = "vta")
      public void testGetCustomerDetails() throws Exception {
          String baseUri = "vta/";
@@ -153,7 +153,7 @@ public class TestManageCustomers {
 
          Map<String,String> headers = new HashMap<String,String>();
          headers.put("ServiceId", VisaProperties.getProperty(Property.VTA_SERVICE_ID));
-         CloseableHttpResponse response = this.abstractVisaAPIClient.doMutualAuthRequest(baseUri + resourcePath, "Create Customer Test", this.createCustomerRequest, MethodTypes.POST, headers);
+         CloseableHttpResponse response = this.visaAPIClient.doMutualAuthRequest(baseUri + resourcePath, "Create Customer Test", this.createCustomerRequest, MethodTypes.POST, headers);
          Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED);
          response.close();
      }

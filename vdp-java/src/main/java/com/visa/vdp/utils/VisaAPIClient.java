@@ -38,9 +38,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-public class AbstractVisaAPIClient {
+public class VisaAPIClient {
     
-    final static Logger logger = Logger.getLogger(AbstractVisaAPIClient.class);
+    final static Logger logger = Logger.getLogger(VisaAPIClient.class);
     
     private static CloseableHttpClient mutualAuthHttpClient;
     private static CloseableHttpClient XPayHttpClient;

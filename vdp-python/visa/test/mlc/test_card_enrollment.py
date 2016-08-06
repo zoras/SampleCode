@@ -1,4 +1,4 @@
-from visa.helpers.abstract_visa_api_client import AbstractVisaAPIClient
+from visa.helpers.visa_api_client import VisaAPIClient
 import json
 import sys
 import os
@@ -18,7 +18,7 @@ class TestCardEnrollement(unittest.TestCase):
     config.read(config_path)
     
     def setUp(self):
-        self.abstract_visa_api_client = AbstractVisaAPIClient()
+        self.visa_api_client = VisaAPIClient()
         self.enrollement_data = json.loads('''{
                     "enrollmentMessageType": "enroll",
                     "enrollmentRequest": {
@@ -33,6 +33,6 @@ class TestCardEnrollement(unittest.TestCase):
     def test_enrollement(self):
         base_uri = 'mlc/'
         resource_path = 'enrollment/v1/enrollments'
-        response = self.abstract_visa_api_client.do_mutual_auth_request(base_uri + resource_path, self.enrollement_data, 'MLC Card Enrollement Test', 'post')
+        response = self.visa_api_client.do_mutual_auth_request(base_uri + resource_path, self.enrollement_data, 'MLC Card Enrollement Test', 'post')
         self.assertEqual(str(response.status_code) ,"200" ,"MLC enrollment's test failed")
         pass

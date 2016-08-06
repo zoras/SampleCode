@@ -9,41 +9,41 @@ import org.apache.http.HttpStatus;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import com.visa.vdp.utils.AbstractVisaAPIClient;
+import com.visa.vdp.utils.VisaAPIClient;
 import com.visa.vdp.utils.MethodTypes;
 import com.visa.vdp.utils.Property;
 import com.visa.vdp.utils.VisaProperties;
 
 public class TestCybersourcePayments {
 
-	String apiKey;
-	String paymentAuthorizationRequest;
-	AbstractVisaAPIClient abstractVisaAPIClient;
+    String apiKey;
+    String paymentAuthorizationRequest;
+    VisaAPIClient visaAPIClient;
 
-	@BeforeTest(groups = "cybersource")
-	public void setup() {
-		this.abstractVisaAPIClient = new AbstractVisaAPIClient();
-		this.apiKey = VisaProperties.getProperty(Property.API_KEY);
-		this.paymentAuthorizationRequest = 
-				"{\"amount\": \"0\","
-					+ "\"currency\": \"USD\","
-					+ "\"payment\": "
-							+ "{ \"cardNumber\": \"4111111111111111\","
-								+ "\"cardExpirationMonth\": \"10\","
-								+ "\"cardExpirationYear\": \"2016\""
-							+ "}"
-				+ "}";
-	}
+    @BeforeTest(groups = "cybersource")
+    public void setup() {
+        this.visaAPIClient = new VisaAPIClient();
+        this.apiKey = VisaProperties.getProperty(Property.API_KEY);
+        this.paymentAuthorizationRequest = 
+                "{\"amount\": \"0\","
+                 + "\"currency\": \"USD\","
+                 + "\"payment\": {"
+                     + "\"cardNumber\": \"4111111111111111\","
+                     + "\"cardExpirationMonth\": \"10\","
+                     + "\"cardExpirationYear\": \"2016\""
+                     + "}"
+                 + "}";
+    }
 
-	@Test(groups = "cybersource")
-	public void testPaymentAuthorizations() throws Exception {
-	    String baseUri = "cybersource/";
-	    String resourcePath = "payments/v1/authorizations";
-	    String queryString = "apikey=" + apiKey;
-	    
-	    CloseableHttpResponse response = this.abstractVisaAPIClient.doXPayTokenRequest(baseUri, resourcePath, queryString, "Payment Authorization Test", this.paymentAuthorizationRequest, MethodTypes.POST, new HashMap<String, String>());
-	    Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED);
-	    response.close();
-	}
+    @Test(groups = "cybersource")
+    public void testPaymentAuthorizations() throws Exception {
+        String baseUri = "cybersource/";
+        String resourcePath = "payments/v1/authorizations";
+        String queryString = "apikey=" + apiKey;
+
+        CloseableHttpResponse response = this.visaAPIClient.doXPayTokenRequest(baseUri, resourcePath, queryString, "Payment Authorization Test", this.paymentAuthorizationRequest, MethodTypes.POST, new HashMap<String, String>());
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED);
+        response.close();
+    }
 
 }

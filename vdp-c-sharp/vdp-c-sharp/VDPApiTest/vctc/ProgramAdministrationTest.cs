@@ -5,11 +5,11 @@ namespace Vdp
     [TestClass]
     public class ProgramAdministrationTest
     {
-        private AbstractVisaAPIClient abstractVisaAPIClient;
+        private VisaAPIClient visaAPIClient;
 
         public ProgramAdministrationTest()
         {
-            abstractVisaAPIClient = new AbstractVisaAPIClient();
+            visaAPIClient = new VisaAPIClient();
         }
 
         [TestMethod]
@@ -17,7 +17,7 @@ namespace Vdp
         {
             string baseUri = "vctc/";
             string resourcePath = "programadmin/v1/configuration/transactiontypecontrols";
-            string status = abstractVisaAPIClient.DoMutualAuthCall(baseUri + resourcePath, "GET", "Retreive Transaction Type Controls Test", "");
+            string status = visaAPIClient.DoMutualAuthCall(baseUri + resourcePath, "GET", "Retreive Transaction Type Controls Test", "");
             Assert.AreEqual(status, "OK");
         }
     }

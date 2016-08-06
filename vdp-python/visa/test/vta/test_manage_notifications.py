@@ -1,4 +1,4 @@
-from visa.helpers.abstract_visa_api_client import AbstractVisaAPIClient
+from visa.helpers.visa_api_client import VisaAPIClient
 import json
 import unittest
 import sys
@@ -18,7 +18,7 @@ class TestManageNotifications(unittest.TestCase):
     config.read(config_path)
     
     def setUp(self):
-        self.abstract_visa_api_client = AbstractVisaAPIClient()
+        self.visa_api_client = VisaAPIClient()
         self.notification_subscription_request = json.loads('''{
                          "contactType": "''' + self.config.get('VDP','vtaNotificationContactType') + '''",
                          "contactValue": "john@visa.com",
@@ -35,6 +35,6 @@ class TestManageNotifications(unittest.TestCase):
     def test_notification_subscription(self):
         base_uri = 'vta/'
         resource_path = 'v3/communities/'+ self.config.get('VDP','vtaCommunityCode') +'/portfolios/' + self.config.get('VDP','vtaPortfolioNumber') +'/customers/' + self.config.get('VDP','vtaCustomerId')+ '/notifications';
-        response = self.abstract_visa_api_client.do_mutual_auth_request(base_uri + resource_path, self.notification_subscription_request, 'Notification Subscriptions Test', 'post', {'ServiceId' : self.config.get('VDP','vtaServiceId')})
+        response = self.visa_api_client.do_mutual_auth_request(base_uri + resource_path, self.notification_subscription_request, 'Notification Subscriptions Test', 'post', {'ServiceId' : self.config.get('VDP','vtaServiceId')})
         self.assertEqual(str(response.status_code) ,"201" ,"Notification Subscriptions Test failed")
         pass

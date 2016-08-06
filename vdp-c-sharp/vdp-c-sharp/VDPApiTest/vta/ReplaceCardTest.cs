@@ -9,11 +9,11 @@ namespace Vdp
     public class ReplaceCardTest
     {
         string replaceCardsRequest;
-        private AbstractVisaAPIClient abstractVisaAPIClient;
+        private VisaAPIClient visaAPIClient;
 
         public ReplaceCardTest()
         {
-            abstractVisaAPIClient = new AbstractVisaAPIClient();
+            visaAPIClient = new VisaAPIClient();
             string strDate = DateTime.UtcNow.ToString("yyyy-MM-ddThh:mm:ss.fffZ");
             replaceCardsRequest = "{"
                          + "\"communityCode\": \"" + ConfigurationManager.AppSettings["vtaCommunityCode"] + "\","
@@ -69,7 +69,7 @@ namespace Vdp
             string resourcePath = "v3/communities/" + ConfigurationManager.AppSettings["vtaCommunityCode"] + "/cards";
             Dictionary<string, string> headers = new Dictionary<string, string>();
             headers.Add("ServiceId", ConfigurationManager.AppSettings["vtaServiceId"]);
-            string status = abstractVisaAPIClient.DoMutualAuthCall(baseUri + resourcePath, "POST", "Replace a card test", replaceCardsRequest, headers);
+            string status = visaAPIClient.DoMutualAuthCall(baseUri + resourcePath, "POST", "Replace a card test", replaceCardsRequest, headers);
             Assert.AreEqual(status, "Created");
         }
     }

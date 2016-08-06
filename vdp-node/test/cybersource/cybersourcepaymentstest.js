@@ -1,12 +1,12 @@
 var request = require('request');
-var xPayUtil = require('../../libs/xpayutil.js');
 var config = require('../../config/configuration.json');
-var abstractVisaAPIClient = require('../../libs/abstractvisapiclient.js');
+var VisaAPIClient = require('../../libs/visaapiclient.js');
 var assert = require('chai').assert;
 var req = request.defaults();
 var randomstring = require('randomstring');
 
 describe('Cybersource Payments Test', function() {
+	var visaAPIClient = new VisaAPIClient();
 	var paymentAuthorizationRequest = JSON.stringify({
 		"amount": "0",
 		"currency": "USD",
@@ -23,7 +23,7 @@ describe('Cybersource Payments Test', function() {
 		var baseUri = 'cybersource/';
 		var resourcePath = 'payments/v1/authorizations';
 		var queryParams = 'apikey=' + apiKey;
-		abstractVisaAPIClient.doXPayRequest(baseUri, resourcePath, queryParams, paymentAuthorizationRequest, 'POST', {}, 
+		visaAPIClient.doXPayRequest(baseUri, resourcePath, queryParams, paymentAuthorizationRequest, 'POST', {}, 
 		function(err, responseCode) {
 			if(!err) {
 				assert.equal(responseCode, 201);

@@ -1,4 +1,4 @@
-from visa.helpers.abstract_visa_api_client import AbstractVisaAPIClient
+from visa.helpers.visa_api_client import VisaAPIClient
 import json
 import datetime
 import unittest
@@ -10,7 +10,7 @@ class TestFundsTransfer(unittest.TestCase):
 
     def setUp(self):
         date = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
-        self.abstract_visa_api_client = AbstractVisaAPIClient()
+        self.visa_api_client = VisaAPIClient()
         self.push_funds_request = json.loads('''{
             "systemsTraceAuditNumber": 350420,
             "retrievalReferenceNumber": "401010350420",
@@ -48,6 +48,6 @@ class TestFundsTransfer(unittest.TestCase):
     def test_push_funds_transactions(self):
         base_uri = 'visadirect/'
         resource_path = 'fundstransfer/v1/pushfundstransactions'
-        response = self.abstract_visa_api_client.do_mutual_auth_request(base_uri + resource_path, self.push_funds_request, 'Push Funds Transaction Test','post')
+        response = self.visa_api_client.do_mutual_auth_request(base_uri + resource_path, self.push_funds_request, 'Push Funds Transaction Test','post')
         self.assertEqual(str(response.status_code) ,"200" ,"Push Funds Transaction test failed")
         pass

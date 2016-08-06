@@ -1,6 +1,6 @@
 var request = require('request');
 var fs = require('fs');
-var xPayUtil = require('./xpayutil.js')
+var XPayUtil = require('./xpayutil.js')
 var config = require('../config/configuration.json');
 var randomstring = require('randomstring');
 
@@ -24,7 +24,11 @@ function getBasicAuthHeader(userId, password) {
 	return 'Basic ' + new Buffer(userId + ':' + password).toString('base64');
 }
 
-exports.doMutualAuthRequest = function(path, requestBody, methodType, headers, callback) {
+function VisaAPIClient() {
+	
+}
+
+VisaAPIClient.prototype.doMutualAuthRequest = function(path, requestBody, methodType, headers, callback) {
 	
 	var userId = config.userId ;
 	var password = config.password;
@@ -56,11 +60,12 @@ exports.doMutualAuthRequest = function(path, requestBody, methodType, headers, c
 			callback(error);
 		}
 	});
-}
+};
 
-exports.doXPayRequest = function(baseUri, resourcePath, queryParams, requestBody, methodType, headers, callback) {
-	
+VisaAPIClient.prototype.doXPayRequest = function(baseUri, resourcePath, queryParams, requestBody, methodType, headers, callback) {
 	logRequest(requestBody, baseUri + resourcePath + '?' + queryParams);
+	
+	var xPayUtil = new XPayUtil();
 	
 	if (methodType === 'POST' || methodType === 'PUT') {
 		headers['Content-Type'] = 'application/json';
@@ -83,4 +88,6 @@ exports.doXPayRequest = function(baseUri, resourcePath, queryParams, requestBody
 			callback(error);
 		}
 	});
-}
+};
+
+module.exports = VisaAPIClient;

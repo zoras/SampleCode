@@ -1,6 +1,5 @@
 var request = require('request');
-var xPayUtil = require('../../libs/xpayutil.js');
-var abstractVisaAPIClient = require('../../libs/abstractvisapiclient.js');
+var VisaAPIClient = require('../../libs/visaapiclient.js');
 var config = require('../../config/configuration.json');
 var assert = require('chai').assert;
 var req = request.defaults();
@@ -8,6 +7,7 @@ var randomstring = require('randomstring');
 
 describe('Update Payment Information', function() {
 
+	var visaAPIClient = new VisaAPIClient();
 	var updatePaymentInfoRequest = JSON.stringify({
         "orderInfo": {
             "currencyCode": "USD",
@@ -32,7 +32,7 @@ describe('Update Payment Information', function() {
 		var resourcePath = 'payment/info/{callId}';
 		resourcePath = resourcePath.replace('{callId}', config.checkoutCallId);
 		var queryParams = 'apikey=' + apiKey;
-		abstractVisaAPIClient.doXPayRequest(baseUri, resourcePath, queryParams, updatePaymentInfoRequest, 'PUT', {}, 
+		visaAPIClient.doXPayRequest(baseUri, resourcePath, queryParams, updatePaymentInfoRequest, 'PUT', {}, 
 		function(err, responseCode) {
 			if(!err) {
 				assert.equal(responseCode, 200);

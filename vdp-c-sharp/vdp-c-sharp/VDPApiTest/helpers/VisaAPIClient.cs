@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace Vdp
 {
-    public class AbstractVisaAPIClient
+    public class VisaAPIClient
     {
         private void LogRequest(string url, string requestBody)
         {

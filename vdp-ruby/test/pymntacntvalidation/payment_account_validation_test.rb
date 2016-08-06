@@ -2,11 +2,11 @@ require 'test/unit'
 require 'rest-client'
 require 'json'
 require 'yaml'
-require File.expand_path('../../../lib/abstract_visa_api_client', __FILE__)
+require File.expand_path('../../../lib/visa_api_client', __FILE__)
 
 class PaymentAccountValidationTest < Test::Unit::TestCase
   def setup
-    @abstract_visa_api_client = AbstractVisaAPIClient.new
+    @visa_api_client = VisaAPIClient.new
     @paymentAccountValidation ='''{
     "acquirerCountryCode": "840",
     "acquiringBin": "408999",
@@ -37,7 +37,7 @@ class PaymentAccountValidationTest < Test::Unit::TestCase
   def test_cardValidation
     base_uri = 'pav/'
     resource_path = 'v1/cardvalidation'
-    response_code = @abstract_visa_api_client.doMutualAuthRequest("#{base_uri}#{resource_path}", "Payment Account Validation test", "post", @paymentAccountValidation)
+    response_code = @visa_api_client.doMutualAuthRequest("#{base_uri}#{resource_path}", "Payment Account Validation test", "post", @paymentAccountValidation)
     assert_equal("200", response_code, "Payment Account Validation test failed")
   end
 end

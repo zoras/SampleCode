@@ -8,11 +8,11 @@ namespace Vdp
     public class MVisaTest
     {
         private string cashInPushPayments;
-        private AbstractVisaAPIClient abstractVisaAPIClient;
+        private VisaAPIClient visaAPIClient;
 
         public MVisaTest()
         {
-            abstractVisaAPIClient = new AbstractVisaAPIClient();
+            visaAPIClient = new VisaAPIClient();
             string strDate = DateTime.UtcNow.ToString("yyyy-MM-ddThh:mm:ss");
             cashInPushPayments =
                  "{"
@@ -46,7 +46,7 @@ namespace Vdp
         {
             string baseUri = "visadirect/";
             string resourcePath = "mvisa/v1/cashinpushpayments";
-            string status = abstractVisaAPIClient.DoMutualAuthCall(baseUri + resourcePath, "POST", "M Visa Transaction Test", cashInPushPayments);
+            string status = visaAPIClient.DoMutualAuthCall(baseUri + resourcePath, "POST", "M Visa Transaction Test", cashInPushPayments);
             Assert.AreEqual(status, "OK");
         }
     }

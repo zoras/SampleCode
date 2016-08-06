@@ -1,7 +1,7 @@
 var request = require('request');
 var fs = require('fs');
 var config = require('../../config/configuration.json');
-var abstractVisaAPIClient = require('../../libs/abstractvisapiclient.js');
+var VisaAPIClient = require('../../libs/visaapiclient.js');
 var assert = require('chai').assert;
 var randomstring = require('randomstring');
 
@@ -12,6 +12,7 @@ var keyFile = config.key;
 var certificateFile = config.cert;
 
 describe('Merchant Locator Test', function() {
+    var visaAPIClient = new VisaAPIClient();
     var strDate = new Date().toISOString().replace(/Z/, '');
     var locatorRequest = JSON.stringify({
         "header": {
@@ -41,7 +42,7 @@ describe('Merchant Locator Test', function() {
         this.timeout(10000);
         var baseUri = 'merchantlocator/';
         var resourcePath = 'v1/locator';
-        abstractVisaAPIClient.doMutualAuthRequest(baseUri + resourcePath, locatorRequest, 'POST', {}, 
+        visaAPIClient.doMutualAuthRequest(baseUri + resourcePath, locatorRequest, 'POST', {}, 
         function(err, responseCode) {
             if(!err) {
                 assert.equal(responseCode, 200);

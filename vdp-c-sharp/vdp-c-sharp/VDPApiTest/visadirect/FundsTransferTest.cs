@@ -7,11 +7,11 @@ namespace Vdp
     public class FundsTransferTest
     {
         private string pushFundsRequest;
-        private AbstractVisaAPIClient abstractVisaAPIClient;
+        private VisaAPIClient visaAPIClient;
 
         public FundsTransferTest()
         {
-            abstractVisaAPIClient = new AbstractVisaAPIClient();
+            visaAPIClient = new VisaAPIClient();
             string strDate = DateTime.UtcNow.ToString("yyyy-MM-ddThh:mm:ss");
             pushFundsRequest =
             "{"
@@ -53,7 +53,7 @@ namespace Vdp
         {
             string baseUri = "visadirect/";
             string resourcePath = "fundstransfer/v1/pushfundstransactions/";
-            string status = abstractVisaAPIClient.DoMutualAuthCall(baseUri + resourcePath, "POST", "Push Funds Transaction Test", pushFundsRequest);
+            string status = visaAPIClient.DoMutualAuthCall(baseUri + resourcePath, "POST", "Push Funds Transaction Test", pushFundsRequest);
             Assert.AreEqual(status, "OK");
         }
     }

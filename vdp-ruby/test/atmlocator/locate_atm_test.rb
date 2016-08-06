@@ -1,11 +1,11 @@
 require 'test/unit'
 require 'json'
-require File.expand_path('../../../lib/abstract_visa_api_client', __FILE__)
+require File.expand_path('../../../lib/visa_api_client', __FILE__)
 
 class LocateAtmTest < Test::Unit::TestCase
   def setup
     @strDate = Time.now.utc.strftime("%Y-%m-%dT%H:%M:%S.%3NZ")
-    @abstract_visa_api_client = AbstractVisaAPIClient.new
+    @visa_api_client = VisaAPIClient.new
     @atmInquiryRequest ='''{
     "requestData": {
         "culture": "en-US",
@@ -98,7 +98,7 @@ class LocateAtmTest < Test::Unit::TestCase
   def test_locateATMs
     base_uri = 'globalatmlocator/'
     resource_path = 'v1/localatms/atmsinquiry'
-    response_code = @abstract_visa_api_client.doMutualAuthRequest("#{base_uri}#{resource_path}", "Locate ATM test", "post", @atmInquiryRequest)
+    response_code = @visa_api_client.doMutualAuthRequest("#{base_uri}#{resource_path}", "Locate ATM test", "post", @atmInquiryRequest)
     assert_equal("200", response_code, "Locate ATM test failed")
   end
   

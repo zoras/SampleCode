@@ -12,7 +12,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import com.visa.vdp.utils.AbstractVisaAPIClient;
+import com.visa.vdp.utils.VisaAPIClient;
 import com.visa.vdp.utils.MethodTypes;
 import com.visa.vdp.utils.Property;
 import com.visa.vdp.utils.VisaProperties;
@@ -20,11 +20,11 @@ import com.visa.vdp.utils.VisaProperties;
 public class TestVisaTravelNotificationService {
 
     String travelNotificationRequest;
-    AbstractVisaAPIClient abstractVisaAPIClient;
+    VisaAPIClient visaAPIClient;
 
     @BeforeTest(groups = "tns")
     public void setup() {
-    	this.abstractVisaAPIClient = new AbstractVisaAPIClient();
+        this.visaAPIClient = new VisaAPIClient();
         SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
         TimeZone utc = TimeZone.getTimeZone("UTC");
         sdfDate.setTimeZone(utc);
@@ -56,8 +56,8 @@ public class TestVisaTravelNotificationService {
     public void testAddTravelItenary() throws Exception {
         String baseUri = "travelnotificationservice/";
         String resourcePath = "v1/travelnotification/itinerary";
-        
-        CloseableHttpResponse response = this.abstractVisaAPIClient.doMutualAuthRequest(baseUri + resourcePath, "Add Travel Itenary Test", this.travelNotificationRequest, MethodTypes.POST, new HashMap<String, String>());
+
+        CloseableHttpResponse response = this.visaAPIClient.doMutualAuthRequest(baseUri + resourcePath, "Add Travel Itenary Test", this.travelNotificationRequest, MethodTypes.POST, new HashMap<String, String>());
         Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK);
         response.close();
     }

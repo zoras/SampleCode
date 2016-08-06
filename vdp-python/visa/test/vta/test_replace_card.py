@@ -1,4 +1,4 @@
-from visa.helpers.abstract_visa_api_client import AbstractVisaAPIClient
+from visa.helpers.visa_api_client import VisaAPIClient
 import json
 import unittest
 import sys
@@ -18,7 +18,7 @@ class TestReplaceCard(unittest.TestCase):
     config.read(config_path)
     
     def setUp(self):
-        self.abstract_visa_api_client = AbstractVisaAPIClient()
+        self.visa_api_client = VisaAPIClient()
         self.replace_cards_request = json.loads('''{
             "communityCode": "''' + self.config.get('VDP','vtaCommunityCode') + '''",
             "newCard": {
@@ -68,6 +68,6 @@ class TestReplaceCard(unittest.TestCase):
     def test_get_communities(self):
         base_uri = 'vta/'
         resource_path = 'v3/communities/' +  self.config.get('VDP','vtaCommunityCode') + '/cards'
-        response = self.abstract_visa_api_client.do_mutual_auth_request(base_uri + resource_path, self.replace_cards_request, 'Replace a card test', 'post', {'ServiceId' : self.config.get('VDP','vtaServiceId')})
+        response = self.visa_api_client.do_mutual_auth_request(base_uri + resource_path, self.replace_cards_request, 'Replace a card test', 'post', {'ServiceId' : self.config.get('VDP','vtaServiceId')})
         self.assertEqual(str(response.status_code) ,"201" ,"Replace a card test failed")
         pass

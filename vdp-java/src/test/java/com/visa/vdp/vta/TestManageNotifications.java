@@ -8,19 +8,19 @@ import org.testng.Assert;
 import org.apache.http.HttpStatus;
 import org.testng.annotations.Test;
 
-import com.visa.vdp.utils.AbstractVisaAPIClient;
+import com.visa.vdp.utils.VisaAPIClient;
 import com.visa.vdp.utils.MethodTypes;
 import com.visa.vdp.utils.Property;
 import com.visa.vdp.utils.VisaProperties;
 
 public class TestManageNotifications {
-    
+
     String notificationSubscriptionRequest;
-    AbstractVisaAPIClient abstractVisaAPIClient;
-    
+    VisaAPIClient visaAPIClient;
+
     @Test(groups = "vta")
     public void setUp() {
-    	this.abstractVisaAPIClient = new AbstractVisaAPIClient();
+        this.visaAPIClient = new VisaAPIClient();
         this.notificationSubscriptionRequest = "{"
                         + "\"contactType\":  \""+ VisaProperties.getProperty(Property.VTA_CONTACT_TYPE)+ "\","
                         + "\"contactValue\":  \"john@visa.com\","
@@ -35,18 +35,18 @@ public class TestManageNotifications {
                      + "}";
     }
 
-     @Test(groups = "vta")
-     public void testNotificationSubscription() throws Exception {
-         String baseUri = "vta/";
-         String resourcePath = "v3/communities/"+VisaProperties.getProperty(Property.VTA_COMMUNITY_CODE) +"/portfolios/" 
-                         + VisaProperties.getProperty(Property.VTA_PORTFOLIO_NUMER) +"/customers/" + VisaProperties.getProperty(Property.VTA_CUSTOMER_ID)
-                         + "/notifications";
+    @Test(groups = "vta")
+    public void testNotificationSubscription() throws Exception {
+        String baseUri = "vta/";
+        String resourcePath = "v3/communities/"+VisaProperties.getProperty(Property.VTA_COMMUNITY_CODE) +"/portfolios/" 
+                + VisaProperties.getProperty(Property.VTA_PORTFOLIO_NUMER) +"/customers/" + VisaProperties.getProperty(Property.VTA_CUSTOMER_ID)
+                + "/notifications";
 
-         Map<String,String> headers = new HashMap<String,String>();
-         headers.put("ServiceId", VisaProperties.getProperty(Property.VTA_SERVICE_ID));
-         
-         CloseableHttpResponse response = this.abstractVisaAPIClient.doMutualAuthRequest(baseUri + resourcePath, "Notification Subscriptions Test", this.notificationSubscriptionRequest, MethodTypes.POST, headers);
-         Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED);
-         response.close();
-     }
+        Map<String,String> headers = new HashMap<String,String>();
+        headers.put("ServiceId", VisaProperties.getProperty(Property.VTA_SERVICE_ID));
+
+        CloseableHttpResponse response = this.visaAPIClient.doMutualAuthRequest(baseUri + resourcePath, "Notification Subscriptions Test", this.notificationSubscriptionRequest, MethodTypes.POST, headers);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED);
+        response.close();
+    }
 }

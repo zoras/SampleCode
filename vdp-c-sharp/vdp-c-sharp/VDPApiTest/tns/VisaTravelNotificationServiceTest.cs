@@ -8,11 +8,11 @@ namespace Vdp
     public class VisaTravelNotificationServiceTest
     {
         private string travelNotificationRequest;
-        private AbstractVisaAPIClient abstractVisaAPIClient;
+        private VisaAPIClient visaAPIClient;
 
         public VisaTravelNotificationServiceTest()
         {
-            abstractVisaAPIClient = new AbstractVisaAPIClient();
+            visaAPIClient = new VisaAPIClient();
             string departureDate = DateTime.UtcNow.ToString("yyyy-MM-dd");
             string returnDate = DateTime.Now.AddDays(7).ToString("yyyy-MM-dd");
             travelNotificationRequest =
@@ -38,7 +38,7 @@ namespace Vdp
         {
             string baseUri = "travelnotificationservice/";
             string resourcePath = "v1/travelnotification/itinerary";
-            string status = abstractVisaAPIClient.DoMutualAuthCall(baseUri + resourcePath, "POST", "Add Travel Itenary Test", travelNotificationRequest);
+            string status = visaAPIClient.DoMutualAuthCall(baseUri + resourcePath, "POST", "Add Travel Itenary Test", travelNotificationRequest);
             Assert.AreEqual(status, "OK");
         }
     }

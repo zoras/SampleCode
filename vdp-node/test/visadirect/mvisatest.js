@@ -1,7 +1,7 @@
 var request = require('request');
 var fs = require('fs');
 var config = require('../../config/configuration.json');
-var abstractVisaAPIClient = require('../../libs/abstractvisapiclient.js');
+var VisaAPIClient = require('../../libs/visaapiclient.js');
 var assert = require('chai').assert;
 var randomstring = require('randomstring');
 
@@ -12,6 +12,7 @@ var keyFile = config.key;
 var certificateFile = config.cert;
 
 describe('Visa Direct M Visa Test', function() {
+	var visaAPIClient = new VisaAPIClient();
 	var strDate = new Date().toISOString().replace(/Z/, '').replace(/\..+/, '');
 	var mVisaTransactionRequest = JSON.stringify({
 		  "acquirerCountryCode": "643",
@@ -42,7 +43,7 @@ describe('Visa Direct M Visa Test', function() {
 		this.timeout(10000);
 		var baseUri = 'visadirect/';
 		var resourcePath = 'mvisa/v1/cashinpushpayments';
-		abstractVisaAPIClient.doMutualAuthRequest(baseUri + resourcePath, mVisaTransactionRequest, 'POST', {}, 
+		visaAPIClient.doMutualAuthRequest(baseUri + resourcePath, mVisaTransactionRequest, 'POST', {}, 
 		function(err, responseCode) {
 			if(!err) {
 				assert.equal(responseCode, 200);

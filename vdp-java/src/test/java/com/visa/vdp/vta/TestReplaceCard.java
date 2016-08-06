@@ -7,20 +7,20 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.visa.vdp.utils.AbstractVisaAPIClient;
+import com.visa.vdp.utils.VisaAPIClient;
 import com.visa.vdp.utils.MethodTypes;
 import com.visa.vdp.utils.Property;
 import com.visa.vdp.utils.VisaProperties;
 
 public class TestReplaceCard {
 
-     String replaceCardsRequest;
-     AbstractVisaAPIClient abstractVisaAPIClient;
-    
-     @Test(groups = "vta")
-     public void setUp() {
-    	 this.abstractVisaAPIClient = new AbstractVisaAPIClient();
-         this.replaceCardsRequest = "{"
+    String replaceCardsRequest;
+    VisaAPIClient visaAPIClient;
+
+    @Test(groups = "vta")
+    public void setUp() {
+        this.visaAPIClient = new VisaAPIClient();
+        this.replaceCardsRequest = "{"
                          + "\"communityCode\": \""+ VisaProperties.getProperty(Property.VTA_COMMUNITY_CODE) + "\","
                                          + "\"newCard\": {"
                                              + "\"address\":" + VisaProperties.getProperty(Property.VTA_NEW_CARD_ADDRESS)+ ","
@@ -65,17 +65,17 @@ public class TestReplaceCard {
                                          + "\"rpin\": null"
                                        + "}"
                              + "}";
-     }
-     
-     @Test(groups = "vta")
-     public void testReplaceCards() throws Exception {
-         String baseUri = "vta/";
-         String resourcePath = "v3/communities/"+VisaProperties.getProperty(Property.VTA_COMMUNITY_CODE) +"/cards";
+    }
 
-         Map<String,String> headers = new HashMap<String,String>();
-         headers.put("ServiceId", VisaProperties.getProperty(Property.VTA_SERVICE_ID));
-         CloseableHttpResponse response = this.abstractVisaAPIClient.doMutualAuthRequest(baseUri + resourcePath, "Replace a card test", this.replaceCardsRequest, MethodTypes.POST, headers);
-         Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED);
-         response.close();
-     }
+    @Test(groups = "vta")
+    public void testReplaceCards() throws Exception {
+        String baseUri = "vta/";
+        String resourcePath = "v3/communities/"+VisaProperties.getProperty(Property.VTA_COMMUNITY_CODE) +"/cards";
+
+        Map<String,String> headers = new HashMap<String,String>();
+        headers.put("ServiceId", VisaProperties.getProperty(Property.VTA_SERVICE_ID));
+        CloseableHttpResponse response = this.visaAPIClient.doMutualAuthRequest(baseUri + resourcePath, "Replace a card test", this.replaceCardsRequest, MethodTypes.POST, headers);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED);
+        response.close();
+    }
 }

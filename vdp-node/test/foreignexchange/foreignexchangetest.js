@@ -1,7 +1,7 @@
 var request = require('request');
 var fs = require('fs');
 var config = require('../../config/configuration.json');
-var abstractVisaAPIClient = require('../../libs/abstractvisapiclient.js');
+var VisaAPIClient = require('../../libs/visaapiclient.js');
 var assert = require('chai').assert;
 var randomstring = require('randomstring');
 
@@ -12,6 +12,7 @@ var keyFile = config.key;
 var certificateFile = config.cert;
 
 describe('Foreign Exchange API test', function() {
+    var visaAPIClient = new VisaAPIClient();
     var foreignExchangeRequest = JSON.stringify({
           "acquirerCountryCode": "840",
           "acquiringBin": "408999",
@@ -39,7 +40,7 @@ describe('Foreign Exchange API test', function() {
         this.timeout(10000);
         var baseUri = 'forexrates/';
         var resourcePath = 'v1/foreignexchangerates';
-        abstractVisaAPIClient.doMutualAuthRequest(baseUri + resourcePath, foreignExchangeRequest, 'POST', {}, 
+        visaAPIClient.doMutualAuthRequest(baseUri + resourcePath, foreignExchangeRequest, 'POST', {}, 
         function(err, responseCode) {
             if(!err) {
                 assert.equal(responseCode, 200);

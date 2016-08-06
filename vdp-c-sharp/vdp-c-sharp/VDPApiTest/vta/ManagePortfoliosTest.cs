@@ -7,11 +7,11 @@ namespace Vdp
     [TestClass]
     public class ManagePortfoliosTest
     {
-        private AbstractVisaAPIClient abstractVisaAPIClient;
+        private VisaAPIClient visaAPIClient;
 
         public ManagePortfoliosTest()
         {
-            abstractVisaAPIClient = new AbstractVisaAPIClient();
+            visaAPIClient = new VisaAPIClient();
         }
 
         [TestMethod]
@@ -21,7 +21,7 @@ namespace Vdp
             string resourcePath = "v3/communities/" + ConfigurationManager.AppSettings["vtaCommunityCode"] + "/portfolios";
             Dictionary<string, string> headers = new Dictionary<string, string>();
             headers.Add("ServiceId", ConfigurationManager.AppSettings["vtaServiceId"]);
-            string status = abstractVisaAPIClient.DoMutualAuthCall(baseUri + resourcePath, "GET", "Get Portfolio Details Test", "", headers);
+            string status = visaAPIClient.DoMutualAuthCall(baseUri + resourcePath, "GET", "Get Portfolio Details Test", "", headers);
             Assert.AreEqual(status, "OK");
         }
     }

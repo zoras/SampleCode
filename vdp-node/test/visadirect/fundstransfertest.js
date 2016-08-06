@@ -1,7 +1,7 @@
 var request = require('request');
 var fs = require('fs');
 var config = require('../../config/configuration.json');
-var abstractVisaAPIClient = require('../../libs/abstractvisapiclient.js');
+var VisaAPIClient = require('../../libs/visaapiclient.js');
 var assert = require('chai').assert;
 var randomstring = require('randomstring');
 
@@ -11,6 +11,7 @@ var keyFile = config.key;
 var certificateFile = config.cert;
 
 describe('Visa Direct Push Funds Transactions test', function() {
+	var visaAPIClient = new VisaAPIClient();
 	var strDate = new Date().toISOString().replace(/\..+/, '');
 	var pushFundsRequest = JSON.stringify({
 		  "systemsTraceAuditNumber": 350420,
@@ -50,7 +51,7 @@ describe('Visa Direct Push Funds Transactions test', function() {
 		this.timeout(10000);
 		var baseUri = 'visadirect/';
 		var resourcePath = 'fundstransfer/v1/pushfundstransactions';
-		abstractVisaAPIClient.doMutualAuthRequest(baseUri + resourcePath, pushFundsRequest, 'POST', {}, 
+		visaAPIClient.doMutualAuthRequest(baseUri + resourcePath, pushFundsRequest, 'POST', {}, 
 		function(err, responseCode) {
 			if(!err) {
 				assert.equal(responseCode, 200);
