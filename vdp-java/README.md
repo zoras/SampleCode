@@ -25,7 +25,7 @@ For generating you jks using the steps below :
 
  Run the following command to add the root certificate to your JKS file.
 
-	keytool -import -alias ejbca -keystore clientkeystore.jks -file VDPCA-Sandbox.pem -storepass <password>
+	keytool -import -alias ejbca -keystore myapp_keyAndCertBundle.jks -file VDPCA-SBX.pem -storepass <password>
 
 Fill up the required values in the file `configuration.properties` located under the folder `resources`. To find more more information on `configuration.properties` refer :
 
