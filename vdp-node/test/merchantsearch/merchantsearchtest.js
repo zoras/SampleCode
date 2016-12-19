@@ -17,36 +17,29 @@ describe('Merchant Search Test', function() {
     var searchRequest = JSON.stringify({
         "header": {
             "messageDateTime": strDate,
-            "requestMessageId": "Request_001",
-            "startIndex": "0"
+            "requestMessageId": "CDISI_GMR_001",
+            "startIndex": "1"
         },
      "searchAttrList": {
-        "merchantName": "cmu edctn materials cntr",
-        "merchantStreetAddress": "802 industrial dr",
-        "merchantCity": "Mount Pleasant",
-        "merchantState": "MI",
-        "merchantPostalCode": "48858",
-        "merchantCountryCode": "840",
-        "merchantPhoneNumber": "19897747123",
-        "merchantUrl": "http://www.emc.cmich.edu",
-        "businessRegistrationId": "386004447",
-        "acquirerCardAcceptorId": "424295031886",
-        "acquiringBin": "476197"
+        "visaMerchantId":"11687107",
+        "visaStoreId":"125861096",
+        "merchantName":"ALOHA CAFE",
+        "merchantCountryCode":"840",
+        "merchantCity": "LOS ANGELES",
+        "merchantState": "CA",
+        "merchantPostalCode": "90012",
+        "merchantStreetAddress": "410 E 2ND ST", 
+        "businessRegistrationId":"196007747",
+        "acquirerCardAcceptorId":"191642760469222",            
+        "acquiringBin":"486168"
      },
-     "responseAttrList": [
-        "GNBANKA"
-     ],
-     "searchOptions": {
-        "maxRecords": "5",
-        "matchIndicators": "true",
-        "matchScore": "true",
-        "proximity": [
-          "merchantName"
-       ],
-        "wildCard": [
-          "merchantName"
-       ]
-     }
+    "responseAttrList": ["GNSTANDARD"],
+    
+    "searchOptions": {
+        "maxRecords": "2",
+        "matchIndicators" :"true",
+        "matchScore": "true"
+    }
    });
     
     it('Merchant Search API Test',function(done) {

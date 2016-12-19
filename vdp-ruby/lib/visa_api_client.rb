@@ -1,16 +1,14 @@
 require 'rest-client'
 require 'yaml'
-require File.expand_path('../x_pay_utils', __FILE__)
 
 class VisaAPIClient
   
   def initialize
     @config = YAML.load_file('configuration.yml')
-    @x_pay_util = XPayUtils.new
   end
   
   def getCorrelationId()
-    # Passing correlation id header (x-correlation-id) is optional while making API calls.
+    # Passing correlation id header (ex-correlation-id) is optional while making API calls.
     correlation_id = (0...12).map { (48 + rand(10)).chr }.join
     return correlation_id
   end
@@ -33,6 +31,15 @@ class VisaAPIClient
     puts "Response Body : " + JSON.pretty_generate(JSON.parse(response.body))
   end
   
+  def get_xpay_token(resource_path, query_string, request_body)
+    timestamp = Time.now.utc.to_i
+    config = YAML.load_file('configuration.yml')
+    shared_secret = config['sharedSecret']
+    hash_input = "#{timestamp}#{resource_path}#{query_string}#{request_body}"
+    hash_output = OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha256'), shared_secret, hash_input)
+    "xv2:#{timestamp}:#{hash_output}"
+  end
+  
   def doMutualAuthRequest(path, test_info, method_type, request_body, headers={})
     url = "#{@config['visaUrl']}#{path}"
     user_id = @config['userId']
@@ -45,7 +52,7 @@ class VisaAPIClient
       headers['Content-type'] = 'application/json'
     end
     headers['accept'] = 'application/json'
-    headers['x-correlation-id'] = "#{correlation_id}_SC" 
+    headers['ex-correlation-id'] = "#{correlation_id}_SC" 
     begin
       response = RestClient::Request.execute(
       :method => method_type,
@@ -71,12 +78,12 @@ class VisaAPIClient
       url = "#{@config['visaUrl']}#{base_uri}#{resource_path}?#{query_string}"
       correlation_id = getCorrelationId()
       logRequest(test_info, url, request_body)
-      xpay_token = @x_pay_util.get_xpay_token(resource_path, query_string, request_body)
+      xpay_token = get_xpay_token(resource_path, query_string, request_body)
       if method_type == 'post' || method_type == 'put'
           headers['Content-type'] = 'application/json'
       end
       headers['accept'] = 'application/json'
-      headers['x-correlation-id'] = "#{correlation_id}_SC"
+      headers['ex-correlation-id'] = "#{correlation_id}_SC"
       headers['x-pay-token'] = xpay_token 
       begin
         response = RestClient::Request.execute(

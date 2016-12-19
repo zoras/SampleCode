@@ -36,7 +36,7 @@ namespace Vdp
         }
 
         [TestMethod]
-        public void TestForeignExchangeRates()
+        public void TestLocationsUpdate()
         {
             string baseUri = "mlc/";
             string resourcePath = "locationupdate/v1/locations";

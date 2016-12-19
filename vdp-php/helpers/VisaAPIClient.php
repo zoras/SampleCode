@@ -34,7 +34,7 @@ class VisaAPIClient {
 		}
 	}
 	
-	/* Correlation Id ( x-correlation-id ) is an optional header while making an API call. You can skip passing the header while calling the API's. */
+	/* Correlation Id ( ex-correlation-id ) is an optional header while making an API call. You can skip passing the header while calling the API's. */
 	private function getCorrelationId() {
 		$seed = str_split('abcdefghijklmnopqrstuvwxyz'
                  .'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -62,7 +62,7 @@ class VisaAPIClient {
 		$absUrl = $this->conf ['VDP'] ['visaUrl'].$path;
 		$authHeader = $this->getBasicAuthHeader($userId, $password);
 		
-		$headers = (array("Accept: application/json", $authHeader, "x-correlation-id: ".$this->getCorrelationId()));
+		$headers = (array("Accept: application/json", $authHeader, "ex-correlation-id: ".$this->getCorrelationId()));
 		if (count($inputHeaders) > 0) {
 			foreach ($inputHeaders as &$header) {
 				array_push($headers, $header);
@@ -102,7 +102,7 @@ class VisaAPIClient {
 		$time = time(); 
 		$preHashString = $time.$resource_path.$query_string.$requestBodyString; 
 		$xPayToken = "xv2:".$time.":".hash_hmac('sha256', $preHashString, $sharedSecret);
-		$headers = (array("Accept: application/json", "X-PAY-TOKEN: ".$xPayToken, "x-correlation-id: ".$this->getCorrelationId()));
+		$headers = (array("Accept: application/json", "X-PAY-TOKEN: ".$xPayToken, "ex-correlation-id: ".$this->getCorrelationId()));
 		$absUrl = $this->conf ['VDP'] ['visaUrl'].$baseUrl.$resource_path.'?'.$query_string;
 		if (count($inputHeaders) > 0) {
 			foreach ($inputHeaders as &$header) {

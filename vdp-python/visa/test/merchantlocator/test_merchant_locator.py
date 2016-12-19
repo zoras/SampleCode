@@ -14,22 +14,21 @@ class TestMerchantLocatorAPI(unittest.TestCase):
         self.locator_request = json.loads('''{
                 "header": {
                     "messageDateTime": "''' + date + '''",
-                    "requestMessageId": "Request_001",
-                    "startIndex": "0"
+                    "requestMessageId": "VCO_GMR_001"
                 },
                 "searchAttrList": {
-                    "merchantName": "Starbucks",
+                    "merchantName": "ALOHA CAFE",
                     "merchantCountryCode": "840",
-                    "latitude": "37.363922",
-                    "longitude": "-121.929163",
-                    "distance": "2",
+                    "latitude": "34.047616",
+                    "longitude": "-118.239079",
+                    "distance": "100",
                     "distanceUnit": "M"
                 },
                 "responseAttrList": [
                 "GNLOCATOR"
                 ],
                 "searchOptions": {
-                    "maxRecords": "5",
+                    "maxRecords": "2",
                     "matchIndicators": "true",
                     "matchScore": "true"
                 }

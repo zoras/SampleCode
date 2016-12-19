@@ -34,9 +34,9 @@ class VisaAPIClient:
         return MSession(user_name, password, cert, key)
     
     """
-       Correlation Id ( x-correlation-id ) is an optional header while making an API call. You can skip passing the header while calling the API's.
+       Correlation Id ( ex-correlation-id ) is an optional header while making an API call. You can skip passing the header while calling the API's.
     """
-    def _get_x_correlation_id(self):
+    def _get_correlation_id(self):
         size = 12 
         chars = string.digits
         correlationId = ''.join(random.choice(chars) for _ in range(size)) + '_SC'
@@ -71,14 +71,14 @@ class VisaAPIClient:
         if method_type == 'post' or method_type == 'put':
             self.session.headers.update({'content-type': 'application/json',
                          'accept': 'application/json',
-                         'x-correlation-id' : self._get_x_correlation_id()})
+                         'x-correlation-id' : self._get_correlation_id()})
             if method_type == 'post' :
                 response = self.session.post(url, json = body, timeout = 10)
             if method_type == 'put' :
                 response = self.session.put(url, json = body, timeout = 10)
             self._logging_helper(url, response, test_info, body)
         elif method_type == 'get':
-            self.session.headers.update({'accept': 'application/json','x-correlation-id' : self._get_x_correlation_id()})
+            self.session.headers.update({'accept': 'application/json','ex-correlation-id' : self._get_correlation_id()})
             response = self.session.get(url, timeout = 10)
             self._logging_helper(url, response, test_info, '')
         return response
@@ -101,7 +101,7 @@ class VisaAPIClient:
             self.session.headers.update({'content-type': 'application/json',
                                 'accept': 'application/json',
                                 'x-pay-token' : self.session.x_pay_token,
-                                'x-correlation-id' : self._get_x_correlation_id()})
+                                'ex-correlation-id' : self._get_correlation_id()})
             if method_type == 'post' :
                 response = self.session.post(url, json = body, timeout = 10)
             if method_type == 'put' :
@@ -110,7 +110,7 @@ class VisaAPIClient:
         elif method_type == 'get':
             self.session.headers.update({
                                 'x-pay-token' : self.session.x_pay_token,
-                                'x-correlation-id' : self._get_x_correlation_id()})
+                                'x-correlation-id' : self._get_correlation_id()})
             response = self.session.get(url, timeout = 10)
             self._logging_helper(url, response, test_info, '')
         return response
