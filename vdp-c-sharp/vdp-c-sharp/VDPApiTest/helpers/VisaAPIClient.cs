@@ -34,7 +34,7 @@ namespace Vdp
             Debug.WriteLine("Response Body: \n" + responseBody);
         }
 
-        //Correlation Id ( x-correlation-id ) is an optional header while making an API call. You can skip passing the header while calling the API's.
+        //Correlation Id ( ex-correlation-id ) is an optional header while making an API call. You can skip passing the header while calling the API's.
         private string GetCorrelationId()
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -82,7 +82,7 @@ namespace Vdp
             
             // Add headers
             request.Headers["Authorization"] = GetBasicAuthHeader(userId, password);
-            request.Headers["x-correlation-id"] = GetCorrelationId();
+            request.Headers["ex-correlation-id"] = GetCorrelationId();
             // Add certificate
             var certificate = new X509Certificate2(certificatePath, certificatePassword);
             request.ClientCertificates.Add(certificate);
@@ -128,7 +128,7 @@ namespace Vdp
 
             string xPayToken = GetXPayToken(resourcePath, "apikey=" + apikey, requestBodyString);
             request.Headers["x-pay-token"] = xPayToken;
-            request.Headers["x-correlation-id"] = GetCorrelationId();
+            request.Headers["ex-correlation-id"] = GetCorrelationId();
 
             try
             {

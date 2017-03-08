@@ -30,7 +30,7 @@ public class TestCybersourcePayments {
                  + "\"payment\": {"
                      + "\"cardNumber\": \"4111111111111111\","
                      + "\"cardExpirationMonth\": \"10\","
-                     + "\"cardExpirationYear\": \"2016\""
+                     + "\"cardExpirationYear\": \"2020\""
                      + "}"
                  + "}";
     }

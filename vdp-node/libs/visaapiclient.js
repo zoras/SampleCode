@@ -1,6 +1,6 @@
 var request = require('request');
 var fs = require('fs');
-var XPayUtil = require('./xpayutil.js')
+var crypto = require('crypto');
 var config = require('../config/configuration.json');
 var randomstring = require('randomstring');
 
@@ -28,6 +28,17 @@ function VisaAPIClient() {
 	
 }
 
+function getXPayToken(resourcePath , queryParams , postBody) {
+	var timestamp = Math.floor(Date.now() / 1000);
+	var sharedSecret = config.sharedSecret;
+	var preHashString = timestamp + resourcePath + queryParams + postBody;
+	var hashString = crypto.createHmac('SHA256', sharedSecret).update(preHashString).digest('hex');
+	var preHashString2 = resourcePath + queryParams + postBody;
+	var hashString2 = crypto.createHmac('SHA256', sharedSecret).update(preHashString2).digest('hex');
+	var xPayToken = 'xv2:' + timestamp + ':' + hashString;
+	return xPayToken;	
+}
+
 VisaAPIClient.prototype.doMutualAuthRequest = function(path, requestBody, methodType, headers, callback) {
 	
 	var userId = config.userId ;
@@ -42,7 +53,7 @@ VisaAPIClient.prototype.doMutualAuthRequest = function(path, requestBody, method
 
 	headers['Accept'] = 'application/json';
 	headers['Authorization'] = getBasicAuthHeader(userId, password);
-	headers['x-correlation-id'] = randomstring.generate({length:12, charset: 'alphanumeric'}) + '_SC'
+	headers['ex-correlation-id'] = randomstring.generate({length:12, charset: 'alphanumeric'}) + '_SC'
 	request({
 		uri : config.visaUrl + path,
 		key: fs.readFileSync(keyFile),
@@ -65,15 +76,13 @@ VisaAPIClient.prototype.doMutualAuthRequest = function(path, requestBody, method
 VisaAPIClient.prototype.doXPayRequest = function(baseUri, resourcePath, queryParams, requestBody, methodType, headers, callback) {
 	logRequest(requestBody, baseUri + resourcePath + '?' + queryParams);
 	
-	var xPayUtil = new XPayUtil();
-	
 	if (methodType === 'POST' || methodType === 'PUT') {
 		headers['Content-Type'] = 'application/json';
 	}
 	
 	headers['Accept'] = 'application/json';
-	headers['x-pay-token'] = xPayUtil.getXPayToken(resourcePath, queryParams, requestBody);
-	headers['x-correlation-id'] = randomstring.generate({length:12, charset: 'alphanumeric'}) + '_SC'
+	headers['x-pay-token'] = getXPayToken(resourcePath, queryParams, requestBody);
+	headers['ex-correlation-id'] = randomstring.generate({length:12, charset: 'alphanumeric'}) + '_SC'
 	request({
 		uri : config.visaUrl + baseUri + resourcePath + '?' + queryParams,
 		method : methodType,

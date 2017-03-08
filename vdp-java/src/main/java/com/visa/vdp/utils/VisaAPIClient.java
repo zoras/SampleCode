@@ -105,7 +105,7 @@ public class VisaAPIClient {
         request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
         request.setHeader(HttpHeaders.ACCEPT, "application/json");
         request.setHeader(HttpHeaders.AUTHORIZATION, BasicAuthHeaderGenerator.getBasicAuthHeader());
-        request.setHeader("x-correlation-id", getCorrelationId());
+        request.setHeader("ex-correlation-id", getCorrelationId());
         
         if (headers != null && headers.isEmpty() == false) {
             for (Entry<String, String> header : headers.entrySet()) {
@@ -136,7 +136,7 @@ public class VisaAPIClient {
         request.setHeader("content-type", "application/json");
         String xPayToken = XPayTokenGenerator.generateXpaytoken(resourcePath, "apikey=" + apikey, body);
         request.setHeader("x-pay-token", xPayToken);
-        request.setHeader("x-correlation-id", getCorrelationId());
+        request.setHeader("ex-correlation-id", getCorrelationId());
         
         if (headers != null && headers.isEmpty() == false) {
             for (Entry<String, String> header : headers.entrySet()) {
