@@ -32,4 +32,3 @@ Sample code is available for the following :
 * Foreign Exchange Rates
 
 The sample code walks you through the basics for making a successful api call and passing through the authentication steps. Feel free to use and review our code. Happy Coding!!!
-
