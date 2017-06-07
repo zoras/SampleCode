@@ -78,7 +78,8 @@ class VisaAPIClient:
                 response = self.session.put(url, json = body, timeout = 10)
             self._logging_helper(url, response, test_info, body)
         elif method_type == 'get':
-            self.session.headers.update({'accept': 'application/json','ex-correlation-id' : self._get_correlation_id()})
+            self.session.headers.update({'accept': 'application/json','ex-correlation-id' : self._get_correlation_id(),
+                                         'content-type': 'application/json'})
             response = self.session.get(url, timeout = 10)
             self._logging_helper(url, response, test_info, '')
         return response
