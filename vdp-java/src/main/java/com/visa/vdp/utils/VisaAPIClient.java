@@ -71,7 +71,7 @@ public class VisaAPIClient {
     private SSLConnectionSocketFactory getSSLSocketFactory() throws KeyManagementException, UnrecoverableKeyException,
     NoSuchAlgorithmException, KeyStoreException, CertificateException, IOException {
         SSLConnectionSocketFactory sslSocketFactory = new SSLConnectionSocketFactory(loadClientCertificate(),
-                        new String[] { "TLSv1" }, null, SSLConnectionSocketFactory.getDefaultHostnameVerifier());
+                        new String[] { "TLSv1.2" }, null, SSLConnectionSocketFactory.getDefaultHostnameVerifier());
         return sslSocketFactory;
     }
     
